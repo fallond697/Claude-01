@@ -44,12 +44,10 @@ const DEFAULT_RETRIES = 2;
  * Service for interacting with Obsidian vault via MCP
  */
 export class VaultService {
-  private readonly config: EnvConfig;
   private readonly mcpCaller: McpToolCaller;
   private readonly serverName: string;
 
-  constructor(config: EnvConfig, mcpCaller: McpToolCaller, serverName = 'obsidian') {
-    this.config = config;
+  constructor(_config: EnvConfig, mcpCaller: McpToolCaller, serverName = 'obsidian') {
     this.mcpCaller = mcpCaller;
     this.serverName = serverName;
   }
@@ -127,8 +125,6 @@ export class VaultService {
     content: string,
     options?: McpCallOptions
   ): Promise<void> {
-    const fullPath = this.resolvePath(path);
-
     try {
       const existingContent = await this.readNote(path, options);
       const newContent = `${existingContent}\n\n${content}`;

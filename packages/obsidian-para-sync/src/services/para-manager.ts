@@ -12,7 +12,8 @@ import {
 } from '../types/index.js';
 import { ParaStructureError, wrapError } from '../errors/sync-errors.js';
 import { VaultService } from './vault-service.js';
-import slugify from 'slugify';
+import slugifyLib from 'slugify';
+const slugify = slugifyLib.default ?? slugifyLib;
 import { format } from 'date-fns';
 import matter from 'gray-matter';
 

@@ -13,14 +13,6 @@ import { SessionSyncError, wrapError } from '../errors/sync-errors.js';
 import { VaultService } from './vault-service.js';
 import { ParaManager } from './para-manager.js';
 
-/** Session entry for daily note */
-interface DailyNoteSession {
-  readonly time: string;
-  readonly path: string;
-  readonly title: string;
-  readonly project: string;
-}
-
 /** Template variables for session summary */
 interface SessionTemplateVars {
   readonly title: string;

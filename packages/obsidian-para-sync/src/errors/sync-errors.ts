@@ -50,11 +50,14 @@ export class VaultOperationError extends SyncError {
 /**
  * Error thrown when a note is not found
  */
-export class NoteNotFoundError extends VaultOperationError {
+export class NoteNotFoundError extends SyncError {
+  readonly operation = 'read';
+  readonly path: string;
+
   constructor(path: string) {
-    super(`Note not found: ${path}`, 'read', path);
+    super(`Note not found: ${path}`, 'NOTE_NOT_FOUND');
     this.name = 'NoteNotFoundError';
-    this.code = 'NOTE_NOT_FOUND';
+    this.path = path;
   }
 }
 
