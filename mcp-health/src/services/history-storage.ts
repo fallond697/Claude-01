@@ -114,9 +114,9 @@ export async function calculateUptimeStats(
       existing.total++;
       if (server.isConnected) {
         existing.successful++;
-        if (server.latencyMs !== null) {
-          existing.latencies.push(server.latencyMs);
-        }
+      }
+      if (server.isConnected && server.latencyMs !== null) {
+        existing.latencies.push(server.latencyMs);
       }
       existing.lastStatus = server.isConnected;
       existing.lastChecked = entry.timestamp;
