@@ -1,0 +1,5 @@
+# Architecture Decision Records
+
+Place ADR documents here following the format:
+- `NNNN-title-of-decision.md`
+- Example: `0001-use-typescript-strict-mode.md`

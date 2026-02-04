@@ -1,0 +1,41 @@
+{
+  "name": "obsidian-para-sync",
+  "version": "0.1.0",
+  "description": "Bidirectional knowledge sync between Claude Code and Obsidian using PARA methodology",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "obsidian",
+    "para",
+    "knowledge-management",
+    "claude-code",
+    "mcp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "gray-matter": "^4.0.3",
+    "slugify": "^1.6.6",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}
