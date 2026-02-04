@@ -2,7 +2,33 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(powershell -Command \"npm install -g @anthropic-ai/claude-code\")"
+      "Bash(powershell -Command \"npm install -g @anthropic-ai/claude-code\")",
+      "Bash(while read f)",
+      "Bash(do python -m json.tool \"$f\")",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(do grep -q '\"\"type\"\"' \"$f\")",
+      "Bash(find /c/Users/FallonD/.claude -name \".mcp.json\" -type f -exec sh -c 'if ! grep -q \"\"\\\\\"\"type\\\\\"\"\"\" \"\"$1\"\"; then echo \"\"MISSING: $1\"\"; fi' _ {} ;)",
+      "Bash(find:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: standardize memory-query skill title format\n\nUpdate title to match convention used by other skill files.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git remote add:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: resolve TypeScript compilation errors in obsidian-para-sync\n\n- Fix readonly property assignment in NoteNotFoundError\n- Add CommonJS/ESM interop for slugify import\n- Remove unused DailyNoteSession interface\n- Remove unused config and fullPath variables\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh auth status:*)",
+      "Bash(git config:*)",
+      "Bash(npx -y @modelcontextprotocol/server-sequential-thinking --version)",
+      "Bash(npx:*)",
+      "Bash(dir:*)",
+      "Bash(grep:*)",
+      "mcp__outlook__check_outlook_auth",
+      "mcp__teams__check_teams_auth",
+      "mcp__sharepoint__check_sharepoint_auth",
+      "mcp__outlook__list_emails"
     ]
   }
 }
