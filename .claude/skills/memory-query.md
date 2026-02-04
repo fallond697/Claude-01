@@ -1,4 +1,4 @@
-# Memory Query Skill
+# /memory-query - Query Memory System
 
 Query the 4-tier memory system for knowledge retrieval.
 
