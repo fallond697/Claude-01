@@ -49,7 +49,8 @@
       "Bash(while read d)",
       "Bash(do echo \"=== $d ===\" ls -la \"$d\"/*.json)",
       "Bash(git fetch:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "mcp__sharepoint__search_sharepoint"
     ]
   }
 }
