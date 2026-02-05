@@ -59,7 +59,9 @@
       "WebFetch(domain:neo4j.com)",
       "mcp__tavily__tavily_extract",
       "Bash(winget search:*)",
-      "Bash(start \"https://neo4j.com/download/\")"
+      "Bash(start \"https://neo4j.com/download/\")",
+      "Bash(where:*)",
+      "Bash(powershell.exe:*)"
     ]
   }
 }
