@@ -47,7 +47,9 @@
       "Bash(do if ! python -m json.tool \"$f\")",
       "Bash(then echo \"INVALID JSON: $f\" fi done)",
       "Bash(while read d)",
-      "Bash(do echo \"=== $d ===\" ls -la \"$d\"/*.json)"
+      "Bash(do echo \"=== $d ===\" ls -la \"$d\"/*.json)",
+      "Bash(git fetch:*)",
+      "Bash(curl:*)"
     ]
   }
 }
