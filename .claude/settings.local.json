@@ -28,7 +28,26 @@
       "mcp__outlook__check_outlook_auth",
       "mcp__teams__check_teams_auth",
       "mcp__sharepoint__check_sharepoint_auth",
-      "mcp__outlook__list_emails"
+      "mcp__outlook__list_emails",
+      "Bash(git commit:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(claude config list:*)",
+      "Bash(python:*)",
+      "Bash(npm update:*)",
+      "Bash(claude --version:*)",
+      "mcp__brave-search__brave_web_search",
+      "WebSearch",
+      "WebFetch(domain:claudelog.com)",
+      "WebFetch(domain:releasebot.io)",
+      "Bash(claude:*)",
+      "mcp__exa__web_search_exa",
+      "Bash(ls:*)",
+      "Bash(do if ! python -m json.tool \"$f\")",
+      "Bash(then echo \"INVALID JSON: $f\" fi done)",
+      "Bash(while read d)",
+      "Bash(do echo \"=== $d ===\" ls -la \"$d\"/*.json)"
     ]
   }
 }
