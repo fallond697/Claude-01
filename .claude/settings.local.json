@@ -57,7 +57,9 @@
       "mcp__servicenow__get_change_request",
       "mcp__outlook__get_email",
       "WebFetch(domain:neo4j.com)",
-      "mcp__tavily__tavily_extract"
+      "mcp__tavily__tavily_extract",
+      "Bash(winget search:*)",
+      "Bash(start \"https://neo4j.com/download/\")"
     ]
   }
 }
