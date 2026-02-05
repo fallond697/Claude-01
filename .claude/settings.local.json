@@ -50,7 +50,12 @@
       "Bash(do echo \"=== $d ===\" ls -la \"$d\"/*.json)",
       "Bash(git fetch:*)",
       "Bash(curl:*)",
-      "mcp__sharepoint__search_sharepoint"
+      "mcp__sharepoint__search_sharepoint",
+      "mcp__outlook__get_calendar_today",
+      "mcp__servicenow__query_change_requests",
+      "mcp__outlook__search_emails",
+      "mcp__servicenow__get_change_request",
+      "mcp__outlook__get_email"
     ]
   }
 }
