@@ -87,7 +87,10 @@
       "Bash(uv run python:*)",
       "Bash(python3.14:*)",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff)",
-      "Bash(git -C /c/Users/FallonD/Code/Claude-01 log --oneline -3)"
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 log --oneline -3)",
+      "Bash(chmod:*)",
+      "Bash(~/.haute/session-mode)",
+      "Bash(HAUTE_MODE=ea bash:*)"
     ]
   }
 }
