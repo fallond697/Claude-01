@@ -61,7 +61,11 @@
       "Bash(winget search:*)",
       "Bash(start \"https://neo4j.com/download/\")",
       "Bash(where:*)",
-      "Bash(powershell.exe:*)"
+      "Bash(powershell.exe:*)",
+      "Bash(printenv:*)",
+      "Bash(python3:*)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 add .claude/settings.local.json)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: add printenv and python3 to permission allowlist\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
