@@ -68,7 +68,15 @@
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: add printenv and python3 to permission allowlist\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 push)",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: add git push to permission allowlist\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git -C /c/Users/FallonD/Code/Claude-01 status)"
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 status)",
+      "mcp__neo4j__get-schema",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(powershell -Command:*)",
+      "mcp__teams__send_teams_chat",
+      "mcp__neo4j__write-cypher",
+      "mcp__neo4j__read-cypher",
+      "Bash(start http://localhost:7474)",
+      "mcp__servicenow__get_incident"
     ]
   }
 }
