@@ -76,7 +76,14 @@
       "mcp__neo4j__write-cypher",
       "mcp__neo4j__read-cypher",
       "Bash(start http://localhost:7474)",
-      "mcp__servicenow__get_incident"
+      "mcp__servicenow__get_incident",
+      "Bash(unzip:*)",
+      "Bash(uv --version:*)",
+      "Bash(/c/Python314/python:*)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff --staged --stat)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 log --oneline -5)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff .claude/settings.local.json)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: update local permission allowlist entries\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
