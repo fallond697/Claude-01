@@ -1,4 +1,4 @@
-import { MemoryTier, MemoryTierConfig } from './types.js';
+import { MemoryTier, Neo4jStorageMode, MemoryTierConfig } from './types.js';
 
 /**
  * Default configuration for each memory tier
@@ -14,6 +14,8 @@ export const MEMORY_TIER_CONFIGS: Record<MemoryTier, MemoryTierConfig> = {
     location: '.specify/memory/constitution.md',
     mcpServers: [],
     commands: ['/speckit.constitution'],
+    neo4jStorageMode: 'none',
+    paperAlias: null,
   },
   [MemoryTier.CONTEXT]: {
     tier: MemoryTier.CONTEXT,
@@ -25,6 +27,8 @@ export const MEMORY_TIER_CONFIGS: Record<MemoryTier, MemoryTierConfig> = {
     location: 'session-local',
     mcpServers: [],
     commands: [],
+    neo4jStorageMode: 'none',
+    paperAlias: 'Context',
   },
   [MemoryTier.EXPLICIT]: {
     tier: MemoryTier.EXPLICIT,
@@ -36,6 +40,8 @@ export const MEMORY_TIER_CONFIGS: Record<MemoryTier, MemoryTierConfig> = {
     location: '.specify/memory/explicit/',
     mcpServers: ['obsidian', 'filesystem'],
     commands: ['/capture', '/promote', '/search'],
+    neo4jStorageMode: 'provenance-only',
+    paperAlias: 'Task',
   },
   [MemoryTier.CONTROLLED]: {
     tier: MemoryTier.CONTROLLED,
@@ -47,6 +53,21 @@ export const MEMORY_TIER_CONFIGS: Record<MemoryTier, MemoryTierConfig> = {
     location: 'External (SharePoint, APIs)',
     mcpServers: ['sharepoint', 'teams', 'outlook'],
     commands: [],
+    neo4jStorageMode: 'primary',
+    paperAlias: 'Project',
+  },
+  [MemoryTier.SYSTEM]: {
+    tier: MemoryTier.SYSTEM,
+    name: 'System',
+    description: 'Cross-project patterns, conventions, and best practices',
+    persistence: 'persistent',
+    writability: 'read-write',
+    scope: 'cross-project',
+    location: 'Neo4j graph database',
+    mcpServers: ['neo4j'],
+    commands: [],
+    neo4jStorageMode: 'cross-project',
+    paperAlias: 'System',
   },
 };
 
@@ -66,6 +87,7 @@ export function getTierConfigsByPrecedence(): readonly MemoryTierConfig[] {
     MEMORY_TIER_CONFIGS[MemoryTier.CONTEXT],
     MEMORY_TIER_CONFIGS[MemoryTier.EXPLICIT],
     MEMORY_TIER_CONFIGS[MemoryTier.CONTROLLED],
+    MEMORY_TIER_CONFIGS[MemoryTier.SYSTEM],
   ];
 }
 
@@ -81,7 +103,7 @@ export function canAiWrite(tier: MemoryTier): boolean {
  * Check if a tier requires audit logging
  */
 export function requiresAuditLog(tier: MemoryTier): boolean {
-  return tier === MemoryTier.CONTROLLED;
+  return tier === MemoryTier.CONTROLLED || tier === MemoryTier.SYSTEM;
 }
 
 /**
@@ -89,4 +111,24 @@ export function requiresAuditLog(tier: MemoryTier): boolean {
  */
 export function getMcpServersForTier(tier: MemoryTier): readonly string[] {
   return MEMORY_TIER_CONFIGS[tier].mcpServers;
+}
+
+/**
+ * Get the Neo4j storage mode for a tier
+ *
+ * @param tier - The memory tier
+ * @returns The Neo4j storage mode configured for that tier
+ */
+export function getStorageModeForTier(tier: MemoryTier): Neo4jStorageMode {
+  return MEMORY_TIER_CONFIGS[tier].neo4jStorageMode;
+}
+
+/**
+ * Check if a tier uses Neo4j for any storage
+ *
+ * @param tier - The memory tier
+ * @returns true if the tier's storage mode is anything other than 'none'
+ */
+export function usesNeo4j(tier: MemoryTier): boolean {
+  return MEMORY_TIER_CONFIGS[tier].neo4jStorageMode !== 'none';
 }

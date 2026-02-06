@@ -11,6 +11,8 @@ export enum MemoryTier {
   EXPLICIT = 2,
   /** Level 3: Controlled - Gated organizational resources */
   CONTROLLED = 3,
+  /** Level 4: System - Cross-project patterns and conventions */
+  SYSTEM = 4,
 }
 
 /**
@@ -26,7 +28,12 @@ export type MemoryWritability = 'read-only' | 'read-write' | 'human-only';
 /**
  * Memory scope
  */
-export type MemoryScope = 'all-sessions' | 'current-session' | 'project' | 'organization';
+export type MemoryScope = 'all-sessions' | 'current-session' | 'project' | 'organization' | 'cross-project';
+
+/**
+ * Neo4j storage mode for each memory tier
+ */
+export type Neo4jStorageMode = 'none' | 'provenance-only' | 'primary' | 'cross-project';
 
 /**
  * Base interface for all memory items
@@ -80,13 +87,30 @@ export interface ControlledMemory extends MemoryItem {
 }
 
 /**
+ * System memory item (Level 4)
+ * Cross-project patterns, conventions, and best practices
+ */
+export interface SystemMemory extends MemoryItem {
+  readonly tier: MemoryTier.SYSTEM;
+  readonly category: 'pattern' | 'glossary' | 'convention' | 'best-practice';
+  readonly isDimensionAgnostic: boolean;
+  readonly applicableProjects: readonly string[];
+}
+
+/**
  * Union type for all memory types
  */
 export type Memory =
   | ConstitutionalMemory
   | ContextMemory
   | ExplicitMemory
-  | ControlledMemory;
+  | ControlledMemory
+  | SystemMemory;
+
+/**
+ * Paper tier alias (from enterprise-memory-architecture paper)
+ */
+export type PaperTierAlias = 'Context' | 'Task' | 'Project' | 'System' | null;
 
 /**
  * Memory tier configuration
@@ -101,6 +125,8 @@ export interface MemoryTierConfig {
   readonly location: string;
   readonly mcpServers: readonly string[];
   readonly commands: readonly string[];
+  readonly neo4jStorageMode: Neo4jStorageMode;
+  readonly paperAlias: PaperTierAlias;
 }
 
 /**

@@ -19,6 +19,21 @@
 | Context Memory | Level 1 - Session-local ephemeral state |
 | Explicit Memory | Level 2 - Persistent project knowledge |
 | Controlled Memory | Level 3 - Gated organizational resources |
+| System Memory | Level 4 - Cross-project patterns, conventions, and best practices stored in Neo4j |
+
+## Enterprise Architecture Concepts
+
+| Term | Definition |
+|------|------------|
+| Context Vector | Four-dimensional filter (role, project, operating tier, session) applied when querying artifacts |
+| Operating Tier | Environment visibility level: Sandbox < Incubation < Enterprise < Commercial |
+| Synapse | Inter-artifact linking mechanism in the knowledge graph (wikilink, content-addressing, provenance-chain, embedding, promotion-breadcrumb) |
+| Artifact | A stored knowledge item in the Neo4j graph, tagged with tier and operating tier |
+| Provenance Chain | Derivation lineage tracking how artifacts were produced across agent executions |
+| Promotion | The act of moving an artifact from a lower tier to a higher tier with validation |
+| Content Hash | SHA-256/512 digest used for content-addressing synapse links |
+| Dimension-Agnostic | Property of L4 System memory: visible from any operating tier regardless of context |
+| Neo4j | Graph database used for storing artifacts, relationships, and vector embeddings |
 
 ## SpecKit Workflow
 
