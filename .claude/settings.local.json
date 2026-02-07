@@ -90,7 +90,21 @@
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 log --oneline -3)",
       "Bash(chmod:*)",
       "Bash(~/.haute/session-mode)",
-      "Bash(HAUTE_MODE=ea bash:*)"
+      "Bash(HAUTE_MODE=ea bash:*)",
+      "Bash(gh repo view:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(go version:*)",
+      "Bash(npm --version:*)",
+      "Bash(node --version:*)",
+      "Bash(node -e:*)",
+      "Bash(npm view:*)",
+      "Bash(bd:*)",
+      "Bash(perles --version:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(git clone:*)",
+      "Bash(export PATH=\"$HOME/.go-sdk/go/bin:$PATH\")",
+      "Bash(~/bin/perles.exe:*)"
     ]
   }
 }
