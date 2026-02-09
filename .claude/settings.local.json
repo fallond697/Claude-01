@@ -107,7 +107,12 @@
       "Bash(~/bin/perles.exe:*)",
       "Bash(git --version:*)",
       "Bash(~/bin/set-mode.sh:*)",
-      "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff --staged)"
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff --staged)",
+      "mcp__context7__resolve-library-id",
+      "WebFetch(domain:code.visualstudio.com)",
+      "WebFetch(domain:docs.github.com)",
+      "mcp__context7__query-docs",
+      "Bash(code:*)"
     ]
   }
 }
