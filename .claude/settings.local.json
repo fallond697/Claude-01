@@ -104,7 +104,8 @@
       "Bash(npm uninstall:*)",
       "Bash(git clone:*)",
       "Bash(export PATH=\"$HOME/.go-sdk/go/bin:$PATH\")",
-      "Bash(~/bin/perles.exe:*)"
+      "Bash(~/bin/perles.exe:*)",
+      "Bash(git --version:*)"
     ]
   }
 }
