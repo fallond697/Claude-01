@@ -105,7 +105,9 @@
       "Bash(git clone:*)",
       "Bash(export PATH=\"$HOME/.go-sdk/go/bin:$PATH\")",
       "Bash(~/bin/perles.exe:*)",
-      "Bash(git --version:*)"
+      "Bash(git --version:*)",
+      "Bash(~/bin/set-mode.sh:*)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff --staged)"
     ]
   }
 }
