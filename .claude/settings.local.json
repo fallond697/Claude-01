@@ -122,7 +122,13 @@
       "Bash(pdflatex:*)",
       "Bash(\"/c/Users/FallonD/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe\" --version)",
       "Bash(gh api:*)",
-      "WebFetch(domain:api.github.com)"
+      "WebFetch(domain:api.github.com)",
+      "Bash(tar xzf:*)",
+      "Bash(wsl --status:*)",
+      "Bash(wsl:*)",
+      "Bash(GOOS=windows GOARCH=amd64 go build:*)",
+      "Bash(export PATH=\"$HOME/bin:$PATH\")",
+      "Bash(~/bin/codebak.exe:*)"
     ]
   }
 }
