@@ -120,7 +120,9 @@
       "Bash(winget install:*)",
       "Bash(export PATH=\"$PATH:/c/Program Files/MiKTeX/miktex/bin/x64:/c/Users/FallonD/AppData/Local/Programs/MiKTeX/miktex/bin/x64\")",
       "Bash(pdflatex:*)",
-      "Bash(\"/c/Users/FallonD/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe\" --version)"
+      "Bash(\"/c/Users/FallonD/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe\" --version)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:api.github.com)"
     ]
   }
 }
