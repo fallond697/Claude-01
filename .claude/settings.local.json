@@ -150,7 +150,8 @@
       "mcp__tavily__tavily_search",
       "Bash(start \"\" \"obsidian://\")",
       "Bash(start \"\" \"obsidian://show-plugin?id=obsidian-importer\")",
-      "Bash(start \"\" \"obsidian://importer?format=onenote\")"
+      "Bash(start \"\" \"obsidian://importer?format=onenote\")",
+      "Bash(start \"\" \"onenote:\")"
     ]
   }
 }
