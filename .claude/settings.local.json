@@ -128,7 +128,8 @@
       "Bash(wsl:*)",
       "Bash(GOOS=windows GOARCH=amd64 go build:*)",
       "Bash(export PATH=\"$HOME/bin:$PATH\")",
-      "Bash(~/bin/codebak.exe:*)"
+      "Bash(~/bin/codebak.exe:*)",
+      "mcp__teams__list_chats"
     ]
   }
 }
