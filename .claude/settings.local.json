@@ -132,7 +132,8 @@
       "mcp__teams__list_chats",
       "Bash(pip install:*)",
       "Bash(start \"\" \"C:\\\\Users\\\\FallonD\\\\Code\\\\Claude-01\\\\ServiceNow_Changes_Assess_State.xlsx\")",
-      "mcp__sharepoint__read_office_file"
+      "mcp__sharepoint__read_office_file",
+      "Bash(code-insiders:*)"
     ]
   }
 }
