@@ -145,7 +145,12 @@
       "mcp__servicenow__get_journal_entries",
       "mcp__servicenow__query_incidents",
       "Bash(~/.claude/skills/\"hsec:sentinel\"/.venv/Scripts/python.exe -c \"import azure.identity; import httpx; import pydantic; print\\(''All deps OK''\\)\")",
-      "Bash(.venv/Scripts/python.exe:*)"
+      "Bash(.venv/Scripts/python.exe:*)",
+      "WebFetch(domain:help.obsidian.md)",
+      "mcp__tavily__tavily_search",
+      "Bash(start \"\" \"obsidian://\")",
+      "Bash(start \"\" \"obsidian://show-plugin?id=obsidian-importer\")",
+      "Bash(start \"\" \"obsidian://importer?format=onenote\")"
     ]
   }
 }
