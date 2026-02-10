@@ -58,7 +58,7 @@ EOF
 cat << EOF
 ## Step 1: TEXT Greeting with Summary
 
-Say: "Hey Jeff, EA here."
+Say: "Hey Dan, EA here."
 
 Then immediately provide:
 - Date: ${CURRENT_DATE} (${DAY_OF_WEEK})
