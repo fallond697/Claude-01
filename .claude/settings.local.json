@@ -143,7 +143,9 @@
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfix: change EA greeting from Jeff to Dan\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "mcp__servicenow__get_problem",
       "mcp__servicenow__get_journal_entries",
-      "mcp__servicenow__query_incidents"
+      "mcp__servicenow__query_incidents",
+      "Bash(~/.claude/skills/\"hsec:sentinel\"/.venv/Scripts/python.exe -c \"import azure.identity; import httpx; import pydantic; print\\(''All deps OK''\\)\")",
+      "Bash(.venv/Scripts/python.exe:*)"
     ]
   }
 }
