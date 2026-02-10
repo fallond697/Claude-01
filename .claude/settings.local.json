@@ -129,7 +129,10 @@
       "Bash(GOOS=windows GOARCH=amd64 go build:*)",
       "Bash(export PATH=\"$HOME/bin:$PATH\")",
       "Bash(~/bin/codebak.exe:*)",
-      "mcp__teams__list_chats"
+      "mcp__teams__list_chats",
+      "Bash(pip install:*)",
+      "Bash(start \"\" \"C:\\\\Users\\\\FallonD\\\\Code\\\\Claude-01\\\\ServiceNow_Changes_Assess_State.xlsx\")",
+      "mcp__sharepoint__read_office_file"
     ]
   }
 }
