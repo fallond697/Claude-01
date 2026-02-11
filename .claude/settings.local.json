@@ -156,7 +156,13 @@
       "Bash(start:*)",
       "Bash(powershell:*)",
       "Bash(git init:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "WebFetch(domain:mcpmanager.ai)",
+      "WebFetch(domain:support.atlassian.com)",
+      "WebFetch(domain:community.atlassian.com)",
+      "Bash(~/.bashrc)",
+      "Bash(export JIRA_API_TOKEN:*)",
+      "Bash(export JIRA_EMAIL=\"dan.fallon@vituity.com\")"
     ]
   }
 }
