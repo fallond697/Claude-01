@@ -153,7 +153,8 @@
       "Bash(start \"\" \"obsidian://importer?format=onenote\")",
       "Bash(start \"\" \"onenote:\")",
       "Bash(start \"\" \"C:\\\\Users\\\\FallonD\\\\Documents\\\\ISMS-WI-11.01-06 Work Instruction for Submitting Change Request.docx\")",
-      "Bash(start:*)"
+      "Bash(start:*)",
+      "Bash(powershell:*)"
     ]
   }
 }
