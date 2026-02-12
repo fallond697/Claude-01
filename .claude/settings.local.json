@@ -162,7 +162,15 @@
       "WebFetch(domain:community.atlassian.com)",
       "Bash(~/.bashrc)",
       "Bash(export JIRA_API_TOKEN:*)",
-      "Bash(export JIRA_EMAIL=\"dan.fallon@vituity.com\")"
+      "Bash(export JIRA_EMAIL=\"dan.fallon@vituity.com\")",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $f ===\")",
+      "Bash(xxd:*)",
+      "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" status)",
+      "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" diff)",
+      "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" log --oneline -5)",
+      "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" add .claude/settings.local.json)",
+      "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" commit -m \"$\\(cat <<''EOF''\nchore: update local permission allowlist entries\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
