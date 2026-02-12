@@ -197,7 +197,13 @@
       "Skill(hcore:updater)",
       "mcp__servicenow__search_configuration_items",
       "mcp__servicenow__get_configuration_item",
-      "mcp__servicenow__query_configuration_items"
+      "mcp__servicenow__query_configuration_items",
+      "Bash(git -C /c/servicenow-mcp status)",
+      "Bash(git -C /c/servicenow-mcp diff)",
+      "Bash(git -C /c/servicenow-mcp log --oneline -5)",
+      "Bash(git -C /c/servicenow-mcp add src/tools/changes.ts)",
+      "Bash(git -C /c/servicenow-mcp commit -m \"$\\(cat <<''EOF''\nfix: use correct ServiceNow field names for planned start/end dates\n\nThe Schedule tab fields are start_date and end_date, not\nplanned_start_date and planned_end_date which don''t exist on\nthe change_request table.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /c/servicenow-mcp remote -v)"
     ]
   }
 }
