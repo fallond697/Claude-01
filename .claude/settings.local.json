@@ -190,7 +190,11 @@
       "mcp__outlook__get_calendar_range",
       "Bash(# List what''s still in skills \\(excluding .archive\\) ls -d /c/Users/FallonD/.claude/skills/*/)",
       "Bash(exit 0)",
-      "Skill(hcore:skill-builder)"
+      "Skill(hcore:skill-builder)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create fallond697/haute-plugins --private --source=. --push)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create haute-plugins --private)",
+      "Bash(git ls-remote:*)",
+      "Skill(hcore:updater)"
     ]
   }
 }

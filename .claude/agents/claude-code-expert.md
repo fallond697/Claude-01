@@ -25,7 +25,7 @@ When I need the latest information, I fetch from:
 
 ## Core Knowledge Base
 
-### Current Version: v2.1.39 (February 11, 2026)
+### Current Version: v2.1.39 (February 10, 2026)
 
 Key recent features:
 - **Claude Opus 4.6** (v2.1.32) - Latest model with fast mode support (v2.1.36)
