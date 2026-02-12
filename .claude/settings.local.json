@@ -172,7 +172,24 @@
       "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" add .claude/settings.local.json)",
       "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" commit -m \"$\\(cat <<''EOF''\nchore: update local permission allowlist entries\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" push)",
-      "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" diff .claude/settings.local.json)"
+      "Bash(git -C \"C:/Users/FallonD/Code/Claude-01\" diff .claude/settings.local.json)",
+      "Skill(marketplace-manager)",
+      "Bash(gh:*)",
+      "Bash(export PATH=\"/c/Program Files/GitHub CLI:$PATH\")",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth status)",
+      "Bash(mcp:*)",
+      "Bash(config \")",
+      "Bash(env:*)",
+      "Bash(du:*)",
+      "Bash(ssh:*)",
+      "Bash(head:*)",
+      "Bash(# PowerShell gh uses a different config path. Let''s find it. find \"\"/c/Users/FallonD/AppData\"\" -name \"\"hosts.yml\"\")",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(do echo \"=== Installing $p ===\")",
+      "mcp__outlook__get_calendar_range",
+      "Bash(# List what''s still in skills \\(excluding .archive\\) ls -d /c/Users/FallonD/.claude/skills/*/)",
+      "Bash(exit 0)"
     ]
   }
 }
