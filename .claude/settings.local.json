@@ -189,7 +189,8 @@
       "Bash(do echo \"=== Installing $p ===\")",
       "mcp__outlook__get_calendar_range",
       "Bash(# List what''s still in skills \\(excluding .archive\\) ls -d /c/Users/FallonD/.claude/skills/*/)",
-      "Bash(exit 0)"
+      "Bash(exit 0)",
+      "Skill(hcore:skill-builder)"
     ]
   }
 }
