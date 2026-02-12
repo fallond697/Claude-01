@@ -194,7 +194,10 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create fallond697/haute-plugins --private --source=. --push)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create haute-plugins --private)",
       "Bash(git ls-remote:*)",
-      "Skill(hcore:updater)"
+      "Skill(hcore:updater)",
+      "mcp__servicenow__search_configuration_items",
+      "mcp__servicenow__get_configuration_item",
+      "mcp__servicenow__query_configuration_items"
     ]
   }
 }
