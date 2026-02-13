@@ -207,7 +207,14 @@
       "mcp__atlassian-jira__jira_get",
       "Skill(hproj:report-writer)",
       "mcp__servicenow__query_releases",
-      "mcp__servicenow__get_release"
+      "mcp__servicenow__get_release",
+      "mcp__teams__get_chat_messages",
+      "Bash(\"/c/Users/FallonD/.cache/neo4j-mcp/neo4j-mcp-v1.3.0\" --version)",
+      "Bash(NEO4J_URI=\"bolt://127.0.0.1:7687\" NEO4J_USERNAME=\"neo4j\" NEO4J_PASSWORD=\"neo4j2026\" \"/c/Users/FallonD/.cache/neo4j-mcp/neo4j-mcp-v1.3.0\":*)",
+      "Bash(cmd //c:*)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 status .mcp.json)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 add .gitignore .claude/settings.local.json)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfix: add .mcp.json to gitignore and update local permission allowlist\n\nExclude .mcp.json \\(contains Neo4j credentials\\) from version control.\nAdd MCP diagnostic and Teams permissions accumulated during session.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
