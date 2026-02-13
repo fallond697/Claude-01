@@ -238,7 +238,7 @@ p.add_run(
 doc.add_paragraph()
 
 # Finding 3 - CHG0039310 blank field
-doc.add_heading('CHG0039310 \u2014 Sites/Business Units Field Blank', level=2)
+doc.add_heading('CHG0039310 \u2014 Sites/Business Units Field Updated', level=2)
 p = doc.add_paragraph()
 p.add_run('Risk: ').bold = True
 p.add_run('Low | ')
@@ -274,6 +274,7 @@ changes = [
         'assigned': 'Yang Lee',
         'requested': 'Jill Truesdale',
         'planned': '02/12/2026 09:00 \u2013 11:00',
+        'ccb_approved': 'CCB Approved 02/12/2026',
         'description': (
             'Bug fix for notification service failing with "too many parameters" error '
             'when provider count exceeds 2,100. Fix updates SQL query in the '
@@ -296,6 +297,7 @@ changes = [
         'assigned': 'Jason Nguyen',
         'requested': 'Andrew Sanchez',
         'planned': '02/12/2026 16:00 \u2013 16:30',
+        'ccb_approved': 'CCB Approved 02/12/2026',
         'description': (
             'Deploy Tanium client (v7.8.2.1111) to all managed Mac devices via Jamf Pro '
             'policy/configuration profile. Silent background install, no user interaction.'
@@ -306,7 +308,7 @@ changes = [
         'backout_notes': 'Revoke config profile by adjusting scope; near-instant via APNS.',
         'test_rating': 'OK',
         'test_notes': 'Tested on IT test group. Verified via Jamf logs and Tanium dashboard.',
-        'review_action': 'Confirm Tanium client reporting from Mac endpoints. Update Sites/BU field.',
+        'review_action': 'Confirm Tanium client reporting from Mac endpoints. Sites/BU field has been updated.',
     },
     {
         'number': 'CHG0039294',
@@ -317,6 +319,7 @@ changes = [
         'assigned': 'Derrick Chin',
         'requested': 'Anjali Mewara',
         'planned': '02/12/2026 09:00 \u2013 10:00',
+        'ccb_approved': 'CCB Approved 02/11/2026',
         'description': (
             'Enable CDC on Contact, Contract, and Contract Implementation objects so '
             'Workato can receive real-time change events for data synchronization.'
@@ -338,6 +341,7 @@ changes = [
         'assigned': 'Paramasivan Arunachalam',
         'requested': 'Nancy Nair',
         'planned': '02/12/2026 09:00 \u2013 11:00',
+        'ccb_approved': 'CCB Approved 02/11/2026',
         'description': (
             'Deploy Salesforce changeset PE-1 to replace email inbox-based PE intake '
             'with system-level notifications and a task queue for IEC creation. Includes '
@@ -360,6 +364,7 @@ changes = [
         'assigned': 'Divyarani Bhat',
         'requested': 'Jennifer Dorais',
         'planned': '02/12/2026 09:00 \u2013 11:00',
+        'ccb_approved': 'CCB Approved 02/11/2026',
         'description': (
             'Schedule Workato recipes to generate Expirables Extract report 5 and 3 '
             'business days before month-end. Includes SQL data prep, notifications, '
@@ -382,6 +387,7 @@ changes = [
         'assigned': 'Bala Subramanyam Tadisetty',
         'requested': 'Melinda Chiem',
         'planned': '02/12/2026 14:00 \u2013 16:00',
+        'ccb_approved': 'CCB Approved 02/12/2026',
         'description': (
             'Automate MOOV employee email domain setup: set primary email to @moov.health, '
             'add @vituity.com alias, add to MOOV employee list. Workato recipe update with '
@@ -404,6 +410,7 @@ changes = [
         'assigned': 'Parvathi Arun',
         'requested': 'Taylor Heberling',
         'planned': '02/12/2026 09:00 \u2013 11:00',
+        'ccb_approved': 'CCB Approved 02/11/2026',
         'description': (
             'Convert the Comments field on the Line of Business object from Long Text Area '
             'to Rich Text Area in Salesforce. Requires updating dependent Apex classes and '
@@ -427,6 +434,7 @@ changes = [
         'requested': 'Rosalinda Rafael',
         'planned': '02/12/2026 09:00 \u2013 11:00',
         'type': 'Standard',
+        'ccb_approved': 'Approved 02/12/2026',
         'description': (
             'Add 6 new Configuration Items to ServiceNow CMDB: Novarad PACS, NovaRis, '
             'Mmodal, Mirth Connect, Rscriptor (AI), Vendor Neutral Archive (VNA). '
@@ -450,6 +458,7 @@ changes = [
         'requested': 'Racquel Llavore',
         'planned': '02/12/2026 10:00 \u2013 10:30',
         'type': 'Standard',
+        'ccb_approved': 'Approved 02/11/2026',
         'description': (
             'Create 3 new AI Analysis fields (Licensure & Privileges, Education, Work History) '
             'on the NewHire/Recred object in Salesforce to enable Workato Recredentialing '
@@ -473,6 +482,7 @@ changes = [
         'requested': 'Kelly Tremper',
         'planned': '02/12/2026 10:00 \u2013 10:30',
         'type': 'Standard',
+        'ccb_approved': 'Approved 02/12/2026',
         'description': (
             'Add SMS and Email survey responses to the existing Survey Sender report in '
             'Salesforce. Create new Survey, Survey Questions, and Notes records. No changeset '
@@ -518,8 +528,8 @@ for chg in changes:
 
     card.rows[4].cells[0].text = 'Test Plan'
     card.rows[4].cells[1].text = chg['test_rating']
-    card.rows[4].cells[2].text = ''
-    card.rows[4].cells[3].text = ''
+    card.rows[4].cells[2].text = 'Approval'
+    card.rows[4].cells[3].text = chg.get('ccb_approved', '')
 
     doc.add_paragraph()
 
