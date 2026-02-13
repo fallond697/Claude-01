@@ -214,7 +214,15 @@
       "Bash(cmd //c:*)",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 status .mcp.json)",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 add .gitignore .claude/settings.local.json)",
-      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfix: add .mcp.json to gitignore and update local permission allowlist\n\nExclude .mcp.json \\(contains Neo4j credentials\\) from version control.\nAdd MCP diagnostic and Teams permissions accumulated during session.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfix: add .mcp.json to gitignore and update local permission allowlist\n\nExclude .mcp.json \\(contains Neo4j credentials\\) from version control.\nAdd MCP diagnostic and Teams permissions accumulated during session.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "WebFetch(domain:www.infoq.com)",
+      "Bash(CLAUDECODE= claude mcp --help)",
+      "Bash(CLAUDECODE= claude mcp list:*)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: add MCP diagnostic permissions and enable project MCP servers\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "neo4j"
+  ]
 }
