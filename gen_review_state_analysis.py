@@ -71,7 +71,7 @@ rows_data = [
     ('CHG0039321', 'BugFix: Expiring Credentials Notifications', 'Low', 'Yang Lee', 'OK', 'OK', 'OK'),
     ('CHG0039310', 'JAMF: Deploy Tanium to Mac', 'Low', 'Jason Nguyen', 'OK', 'OK', 'OK'),
     ('CHG0039294', 'Enable Salesforce CDC for Workato', 'Low', 'Derrick Chin', 'OK', 'OK', 'OK'),
-    ('CHG0039290', 'PE-1: Retire email inbox notifications', 'Low', 'Paramasivan Arunachalam', 'OK', 'WEAK', 'OK'),
+    ('CHG0039290', 'PE-1: Retire email inbox notifications', 'Low', 'Paramasivan Arunachalam', 'OK', 'OK', 'OK'),
     ('CHG0039267', 'Expirables Extract Report Scheduling', 'Low', 'Divyarani Bhat', 'OK', 'OK', 'OK'),
     ('CHG0039266', 'Update Informational Materials on Cred App', 'V.High', 'Niraj Ganani', 'OK', 'OK', 'OK'),
     ('CHG0039154', 'MOOV Email Automation in HCM', 'Low', 'Bala Tadisetty', 'OK', 'OK', 'OK'),
@@ -155,12 +155,10 @@ p.add_run(
     'system to its pre-implementation state.'
 )
 p = doc.add_paragraph()
-p.add_run('Recommendation: ').bold = True
+p.add_run('Resolution: ').bold = True
 p.add_run(
-    'Since the change is already implemented and in Review, this is noted for process '
-    'improvement. Future Salesforce changeset deployments should document rollback steps '
-    'for each component deployed (permission sets, flows, page layouts, record types). '
-    'Assigned to has been notified.'
+    'Paramasivan Arunachalam has been contacted and has updated the backout plan in the CR '
+    'to include changeset rollback steps. No further action needed.'
 )
 
 doc.add_paragraph()
@@ -181,10 +179,10 @@ p.add_run(
     'is blank. This was previously flagged during CCB prep for the February 12 meeting.'
 )
 p = doc.add_paragraph()
-p.add_run('Recommendation: ').bold = True
+p.add_run('Resolution: ').bold = True
 p.add_run(
-    'Request that Jason Nguyen update the Sites/BU field before the change is closed. '
-    'This field supports audit trail completeness.'
+    'Jason Nguyen has been contacted and the Sites/BU field has been updated in the CR. '
+    'No further action needed.'
 )
 
 doc.add_paragraph()
@@ -273,8 +271,8 @@ changes = [
         ),
         'impl_rating': 'OK',
         'impl_notes': '6 detailed steps: deploy changeset, assign permissions, verify record types, layouts, flow, login validation.',
-        'backout_rating': 'WEAK',
-        'backout_notes': 'Only covers removing permission set. Does not address reverting the deployed changeset, deactivating the flow, or restoring page layouts.',
+        'backout_rating': 'OK',
+        'backout_notes': 'Updated by Paramasivan to include changeset rollback steps.',
         'test_rating': 'OK',
         'test_notes': 'Tested in SB2 by Nancy Nair and team. Sara Jew/Nancy Nair validate post-deploy.',
         'review_action': 'Confirm with Nancy Nair/Sara Jew that PE notification queue is functional.',
@@ -506,9 +504,9 @@ for i, h in enumerate(cl_headers):
 
 cl_data = [
     ('CHG0039321', 'Pending \u2014 Jill Truesdale', 'None identified', 'Yes, pending validation'),
-    ('CHG0039310', 'Pending \u2014 Jason Nguyen', 'Sites/BU field blank', 'Yes, after field update'),
+    ('CHG0039310', 'Pending \u2014 Jason Nguyen', 'Sites/BU field updated', 'Yes, pending validation'),
     ('CHG0039294', 'Pending \u2014 Savannah', 'None identified', 'Yes, pending validation'),
-    ('CHG0039290', 'Pending \u2014 Nancy Nair/Sara Jew', 'Backout plan incomplete (process note)', 'Yes, pending validation'),
+    ('CHG0039290', 'Pending \u2014 Nancy Nair/Sara Jew', 'Backout plan updated', 'Yes, pending validation'),
     ('CHG0039267', 'Pending \u2014 first month-end run', 'Side-by-side comparison needed', 'Yes, after month-end'),
     ('CHG0039266', 'Pending \u2014 Selena LomeliGraham', 'Risk rating review recommended', 'Yes, pending validation'),
     ('CHG0039154', 'Pending \u2014 Bala Tadisetty', 'None identified', 'Yes, pending validation'),
@@ -535,7 +533,7 @@ doc.add_paragraph(
     style='List Number'
 )
 doc.add_paragraph(
-    'CHG0039310: Jason Nguyen should update the Sites/BU impacted field before closure.',
+    'CHG0039310: Sites/BU impacted field has been updated by Jason Nguyen. Ready for closure pending validation.',
     style='List Number'
 )
 doc.add_paragraph(
@@ -544,7 +542,7 @@ doc.add_paragraph(
     style='List Number'
 )
 doc.add_paragraph(
-    'CHG0039290: Backout plan does not cover changeset rollback. Assigned to has been notified.',
+    'CHG0039290: Backout plan has been updated by Paramasivan to include changeset rollback. Ready for closure.',
     style='List Number'
 )
 doc.add_paragraph(

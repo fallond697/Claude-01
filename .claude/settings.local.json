@@ -231,7 +231,9 @@
       "Bash(tasklist:*)",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff --stat)",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 add gen_review_state_analysis.py .claude/settings.local.json)",
-      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfeat: add Review state change analysis generator\n\nPython-docx script to query and analyze 11 changes \\(8 Normal, 3 Standard\\)\nin Review state. Includes plan assessments, findings, and closure readiness.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfeat: add Review state change analysis generator\n\nPython-docx script to query and analyze 11 changes \\(8 Normal, 3 Standard\\)\nin Review state. Includes plan assessments, findings, and closure readiness.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 add \"Changes in Review State Analysis 2026-02-13.docx\")",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: add generated Review State Analysis docx\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   },
   "enableAllProjectMcpServers": true,
