@@ -218,7 +218,10 @@
       "WebFetch(domain:www.infoq.com)",
       "Bash(CLAUDECODE= claude mcp --help)",
       "Bash(CLAUDECODE= claude mcp list:*)",
-      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: add MCP diagnostic permissions and enable project MCP servers\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: add MCP diagnostic permissions and enable project MCP servers\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 add gen_ccb_improvements.py)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfeat: add CCB process improvement recommendations generator\n\nPython-docx script to generate the post-CCB improvement report\nbased on February 12, 2026 session findings.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: update local permission allowlist\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   },
   "enableAllProjectMcpServers": true,
