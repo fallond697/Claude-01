@@ -43,12 +43,12 @@ doc.add_paragraph()
 # Executive Summary
 doc.add_heading('Executive Summary', level=1)
 doc.add_paragraph(
-    'There are 11 change requests currently in Review state (8 Normal, 3 Standard), all '
+    'There are 10 change requests currently in Review state (7 Normal, 3 Standard), all '
     'with planned implementation dates of February 12, 2026. These changes require '
     'post-implementation validation confirmation before they can be advanced to Closed. '
-    'Nine changes are rated Low risk, one Moderate (CHG0039221), and one Very High '
-    '(CHG0039266) with High impact. The Very High change warrants closer review of its '
-    'post-deployment validation.'
+    'Nine changes are rated Low risk and one Moderate (CHG0039221). All 10 changes show '
+    'approval status as Approved. The 7 Normal changes have individual approver records; '
+    'the 3 Standard changes were auto-approved per policy.'
 )
 
 doc.add_paragraph()
@@ -56,9 +56,9 @@ doc.add_paragraph()
 # Summary table
 doc.add_heading('Change Summary', level=1)
 
-doc.add_heading('Normal Changes (8)', level=2)
+doc.add_heading('Normal Changes (7)', level=2)
 
-summary_table = doc.add_table(rows=9, cols=7)
+summary_table = doc.add_table(rows=8, cols=7)
 summary_table.style = 'Medium Shading 1 Accent 1'
 summary_table.alignment = WD_TABLE_ALIGNMENT.CENTER
 
@@ -73,7 +73,6 @@ rows_data = [
     ('CHG0039294', 'Enable Salesforce CDC for Workato', 'Low', 'Derrick Chin', 'OK', 'OK', 'OK'),
     ('CHG0039290', 'PE-1: Retire email inbox notifications', 'Low', 'Paramasivan Arunachalam', 'OK', 'OK', 'OK'),
     ('CHG0039267', 'Expirables Extract Report Scheduling', 'Low', 'Divyarani Bhat', 'OK', 'OK', 'OK'),
-    ('CHG0039266', 'Update Informational Materials on Cred App', 'V.High', 'Niraj Ganani', 'OK', 'OK', 'OK'),
     ('CHG0039154', 'MOOV Email Automation in HCM', 'Low', 'Bala Tadisetty', 'OK', 'OK', 'OK'),
     ('CHG0039141', 'Convert Comments Field to Rich Text', 'Low', 'Parvathi Arun', 'OK', 'OK', 'OK'),
 ]
@@ -109,29 +108,104 @@ doc.add_paragraph()
 # Findings
 doc.add_heading('Findings & Observations', level=1)
 
-# Finding 1 - CHG0039266
-doc.add_heading('CHG0039266 \u2014 Very High Risk Rating for Content Update', level=2)
-p = doc.add_paragraph()
-p.add_run('Risk: ').bold = True
-p.add_run('Very High | ')
-p.add_run('Impact: ').bold = True
-p.add_run('1 - High')
-doc.add_paragraph()
+# Approval Status
+doc.add_heading('Approval Status', level=2)
 p = doc.add_paragraph()
 p.add_run('Finding: ').bold = True
 p.add_run(
-    'This change updates informational materials on the credentialing application in '
-    'Salesforce. It is rated Very High risk with High impact, which appears disproportionate '
-    'for a content update. The description is minimal ("Updates to the Informational '
-    'Materials on Cred App") and does not explain what materials are changing or why the '
-    'risk rating is so high. Implementation, backout, and test plans are all adequate.'
+    'All 10 changes show approval status as Approved. All changes were approved and added to '
+    'Release Req RLSE0012885 (02/12 EA Release window). Approval data sourced from the '
+    'sysapproval_approver table, Notes tab (work_notes/comments), and sys_history_line audit trail.'
 )
+doc.add_paragraph()
+
+# Full approval table - all 10 changes
+approval_table = doc.add_table(rows=11, cols=5)
+approval_table.style = 'Medium Shading 1 Accent 1'
+approval_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+appr_headers = ['Change', 'Type', 'Approved By', 'Date', 'Notes']
+for i, h in enumerate(appr_headers):
+    approval_table.rows[0].cells[i].text = h
+appr_data = [
+    ('CHG0039321', 'Normal', 'Brian Ouderkirk', '02/12/2026', 'Added to RLSE0012885'),
+    ('CHG0039310', 'Normal', 'Dan Fallon', '02/12/2026', 'CCB Approved per work note'),
+    ('CHG0039294', 'Normal', 'Brian Ouderkirk', '02/11/2026', 'Added to RLSE0012885'),
+    ('CHG0039290', 'Normal', 'Brian Ouderkirk', '02/11/2026', 'Rejected 02/10, re-approved 02/11'),
+    ('CHG0039267', 'Normal', 'Brian Ouderkirk', '02/11/2026', 'Hunter Dix noted "Approved" in work notes'),
+    ('CHG0039154', 'Normal', 'Dan Fallon', '02/12/2026', 'CCB Approved per work note'),
+    ('CHG0039141', 'Normal', 'Brian Ouderkirk', '02/11/2026', 'Added to RLSE0012885'),
+    ('CHG0039315', 'Standard', 'Ray Blor (submitter)', '02/10/2026', 'Brian Ouderkirk approved in comments'),
+    ('CHG0039286', 'Standard', 'Hunter Dix (submitter)', '02/06/2026', 'Brian Ouderkirk approved in comments'),
+    ('CHG0039221', 'Standard', 'Kelly Tremper (submitter)', '01/27/2026', 'Brian Ouderkirk approved in comments'),
+]
+for i, (chg, ctype, approver, date, notes) in enumerate(appr_data):
+    row = approval_table.rows[i + 1]
+    row.cells[0].text = chg
+    row.cells[1].text = ctype
+    row.cells[2].text = approver
+    row.cells[3].text = date
+    row.cells[4].text = notes
+doc.add_paragraph()
 p = doc.add_paragraph()
-p.add_run('Recommendation: ').bold = True
+p.add_run('CCB Approver Pool: ').bold = True
 p.add_run(
-    'Before closing, confirm with Selena LomeliGraham that post-deployment validation was '
-    'completed successfully. Consider whether the Very High / High rating is appropriate '
-    'for a content update, or if the risk assessment needs recalibration.'
+    'Brian Ouderkirk (5 Normal approvals, 3 Standard approvals in comments), '
+    'Dan Fallon (2 Normal approvals). Derrick Chin served as alternate approver '
+    '(set to "No Longer Required" once primary approval was granted).'
+)
+doc.add_paragraph()
+p = doc.add_paragraph()
+p.add_run('CHG0039290 Rejection History: ').bold = True
+p.add_run(
+    'Initially approved by Sara Jew (02/09), reset by Brian Ouderkirk for corrections. '
+    'Submitted by Paramasivan (02/10), rejected by Brian Ouderkirk citing incomplete test plan. '
+    'Re-submitted by Hunter Dix (02/11), approved by Brian Ouderkirk (02/11). '
+    'Backout plan was updated between submissions.'
+)
+
+doc.add_paragraph()
+
+# Post-Deploy Validation from Notes Tab
+doc.add_heading('Post-Deployment Validation (from Notes Tab)', level=2)
+p = doc.add_paragraph()
+p.add_run('Finding: ').bold = True
+p.add_run(
+    'Several changes have post-deployment validation comments in the Notes tab (Additional Comments). '
+    'The following changes have received validation confirmation from stakeholders:'
+)
+doc.add_paragraph()
+
+val_table = doc.add_table(rows=11, cols=4)
+val_table.style = 'Medium Shading 1 Accent 1'
+val_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+val_headers = ['Change', 'Validator', 'Date', 'Validation Status']
+for i, h in enumerate(val_headers):
+    val_table.rows[0].cells[i].text = h
+val_data = [
+    ('CHG0039321', 'Jill Truesdale', '02/13/2026', 'Validated \u2014 emails sending correctly'),
+    ('CHG0039310', 'Jason Nguyen', '02/12/2026', '70% deployed, devices trickling in'),
+    ('CHG0039294', 'Anjali Mewara', '02/12/2026', 'CDC triggers configured, awaiting test'),
+    ('CHG0039290', 'Paramasivan Arunachalam', '02/12/2026', 'Deployed to prod, awaiting feedback'),
+    ('CHG0039267', 'Divyarani Bhat', '02/12/2026', 'Implemented; pending month-end comparison'),
+    ('CHG0039154', 'Bala Tadisetty', '02/12/2026', 'Deployed, monitoring jobs'),
+    ('CHG0039141', 'Parvathi Arun', '02/12/2026', 'Implemented, asked Taylor to validate'),
+    ('CHG0039315', 'Ray Blor', '02/12/2026', 'Reviewed in production'),
+    ('CHG0039286', 'Racquel Llavore', '02/12/2026', 'Validated \u2014 "looks good in prod"'),
+    ('CHG0039221', 'Savannah Lee', '02/13/2026', 'Validated \u2014 "Good to close"'),
+]
+for i, (chg, validator, date, status) in enumerate(val_data):
+    row = val_table.rows[i + 1]
+    row.cells[0].text = chg
+    row.cells[1].text = validator
+    row.cells[2].text = date
+    row.cells[3].text = status
+doc.add_paragraph()
+p = doc.add_paragraph()
+p.add_run('Summary: ').bold = True
+p.add_run(
+    '3 changes have explicit closure-ready validation (CHG0039321, CHG0039286, CHG0039221). '
+    '6 changes have deployment confirmation but are awaiting final validation. '
+    'CHG0039267 cannot be fully validated until the first month-end run.'
 )
 
 doc.add_paragraph()
@@ -298,27 +372,6 @@ changes = [
         'test_rating': 'OK',
         'test_notes': 'Validated SQL logic, executed test runs with controlled recipients.',
         'review_action': 'Confirm first scheduled run executes correctly. Side-by-side comparison with existing reports at month-end.',
-    },
-    {
-        'number': 'CHG0039266',
-        'title': 'Updates to Informational Materials on Cred App',
-        'risk': 'Very High',
-        'impact': '1 - High',
-        'group': 'Enterprise Applications',
-        'assigned': 'Niraj Ganani',
-        'requested': 'Selena LomeliGraham',
-        'planned': '02/12/2026 10:00 \u2013 10:30',
-        'description': (
-            'Update informational materials within the online credentialing application '
-            'in Salesforce. Update flow and upload files to folder libraries.'
-        ),
-        'impl_rating': 'OK',
-        'impl_notes': 'Navigate to Setup > Flow > update Credentialing Application flow, upload files to folder libraries, link in flow. Changeset from SB2 provided.',
-        'backout_rating': 'OK',
-        'backout_notes': 'Reactivate old version of flow.',
-        'test_rating': 'OK',
-        'test_notes': 'Tested in Sandbox with Selena LomeliGraham.',
-        'review_action': 'PRIORITY: Confirm with Selena that post-deploy validation is complete. Assess whether Very High / High rating is appropriate for a content update.',
     },
     {
         'number': 'CHG0039154',
@@ -495,7 +548,7 @@ for chg in changes:
 # Closure readiness
 doc.add_heading('Closure Readiness Assessment', level=1)
 
-closure_table = doc.add_table(rows=12, cols=4)
+closure_table = doc.add_table(rows=11, cols=4)
 closure_table.style = 'Medium Shading 1 Accent 1'
 closure_table.alignment = WD_TABLE_ALIGNMENT.CENTER
 cl_headers = ['Change', 'Post-Deploy Validated?', 'Outstanding Items', 'Ready to Close?']
@@ -503,17 +556,16 @@ for i, h in enumerate(cl_headers):
     closure_table.rows[0].cells[i].text = h
 
 cl_data = [
-    ('CHG0039321', 'Pending \u2014 Jill Truesdale', 'None identified', 'Yes, pending validation'),
-    ('CHG0039310', 'Pending \u2014 Jason Nguyen', 'Sites/BU field updated', 'Yes, pending validation'),
-    ('CHG0039294', 'Pending \u2014 Savannah', 'None identified', 'Yes, pending validation'),
-    ('CHG0039290', 'Pending \u2014 Nancy Nair/Sara Jew', 'Backout plan updated', 'Yes, pending validation'),
-    ('CHG0039267', 'Pending \u2014 first month-end run', 'Side-by-side comparison needed', 'Yes, after month-end'),
-    ('CHG0039266', 'Pending \u2014 Selena LomeliGraham', 'Risk rating review recommended', 'Yes, pending validation'),
-    ('CHG0039154', 'Pending \u2014 Bala Tadisetty', 'None identified', 'Yes, pending validation'),
-    ('CHG0039141', 'Pending \u2014 Taylor Heberling', 'None identified', 'Yes, pending validation'),
-    ('CHG0039315', 'Pending \u2014 Ray Blor/Vinod', 'None identified', 'Yes, pending validation'),
-    ('CHG0039286', 'Pending \u2014 Racquel Llavore', 'None identified', 'Yes, pending validation'),
-    ('CHG0039221', 'Pending \u2014 Savannah', 'None identified', 'Yes, pending validation'),
+    ('CHG0039321', 'Validated \u2014 Jill Truesdale 02/13', 'None', 'Yes \u2014 ready to close'),
+    ('CHG0039310', 'Partial \u2014 70% deployed', 'Full deployment pending', 'Yes, after full rollout'),
+    ('CHG0039294', 'Deployed \u2014 Anjali awaiting test', 'CDC trigger test pending', 'Yes, pending validation'),
+    ('CHG0039290', 'Deployed \u2014 awaiting Nancy/Sara', 'None', 'Yes, pending validation'),
+    ('CHG0039267', 'Implemented \u2014 Divyarani', 'Month-end comparison needed', 'No \u2014 after month-end'),
+    ('CHG0039154', 'Deployed \u2014 Bala monitoring', 'Job monitoring in progress', 'Yes, pending validation'),
+    ('CHG0039141', 'Deployed \u2014 Taylor to validate', 'Taylor validation pending', 'Yes, pending validation'),
+    ('CHG0039315', 'Reviewed \u2014 Ray Blor', 'None', 'Yes \u2014 ready to close'),
+    ('CHG0039286', 'Validated \u2014 Racquel 02/12', 'None', 'Yes \u2014 ready to close'),
+    ('CHG0039221', 'Validated \u2014 Savannah 02/13', 'None', 'Yes \u2014 ready to close'),
 ]
 for i, (chg, validated, outstanding, ready) in enumerate(cl_data):
     row = closure_table.rows[i + 1]
@@ -528,8 +580,8 @@ doc.add_paragraph()
 doc.add_heading('Recommendations', level=1)
 
 doc.add_paragraph(
-    'Change owners should add post-deployment validation comments to each CR and '
-    'advance to Closed once confirmed successful.',
+    'Change owners should add post-deployment validation comments to each CR so '
+    'the Change Manager can advance the record to Closed.',
     style='List Number'
 )
 doc.add_paragraph(
@@ -537,12 +589,8 @@ doc.add_paragraph(
     style='List Number'
 )
 doc.add_paragraph(
-    'CHG0039266: Review whether Very High / High risk rating is appropriate for a '
-    'content-only update.',
-    style='List Number'
-)
-doc.add_paragraph(
-    'CHG0039290: Backout plan has been updated by Paramasivan to include changeset rollback. Ready for closure.',
+    'CHG0039290: Backout plan has been updated by Paramasivan to include changeset rollback. '
+    'Initially rejected by Brian Ouderkirk on 02/10, re-submitted and approved 02/11. Ready for closure.',
     style='List Number'
 )
 doc.add_paragraph(
