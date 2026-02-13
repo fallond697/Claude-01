@@ -235,7 +235,9 @@
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 add \"Changes in Review State Analysis 2026-02-13.docx\")",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nchore: add generated Review State Analysis docx\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "mcp__servicenow__get_approvals",
-      "mcp__servicenow__get_attachments"
+      "mcp__servicenow__get_attachments",
+      "Bash(command -v:*)",
+      "Bash(cmd.exe /c \"echo %APPDATA%\\\\npm\\\\claude.cmd && dir \"\"%APPDATA%\\\\npm\\\\claude.cmd\"\" 2>&1\")"
     ]
   },
   "enableAllProjectMcpServers": true,
