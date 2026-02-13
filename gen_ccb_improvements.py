@@ -100,20 +100,16 @@ p.add_run('Finding: ').bold = True
 p.add_run(
     'The February 12 CCB meeting transcript was only available via manual download from the '
     'Teams meeting recap page. Other recurring meetings (HRIS Change Management, CMS Quality, '
-    'Enterprise CM doc review) have transcripts that automatically sync to OneDrive. The root '
-    'cause is that the "Record and transcribe automatically" toggle is not enabled at the '
-    'meeting series level for the CCB meeting. Without automatic sync, the transcript is at '
-    'risk of being lost or inaccessible for audit purposes.'
+    'Enterprise CM doc review) have transcripts that automatically sync to OneDrive. Without '
+    'automatic sync, the transcript is at risk of being lost or inaccessible for audit purposes.'
 )
 p = doc.add_paragraph()
 p.add_run('Recommendation: ').bold = True
 p.add_run(
-    'Enable "Record and transcribe automatically" at the series level for the Weekly Enterprise '
-    'CCB Meeting: Teams > Calendar > right-click meeting > Edit series > Meeting options > '
-    'toggle ON. This will auto-start both recording and transcription, syncing the transcript '
-    'to OneDrive alongside the recording. The transcript should be archived with the CCB prep '
-    'documents for each session to create a readily accessible, auditable record of board '
-    'decisions for change management compliance and post-incident review.'
+    'Ensure the CCB meeting transcript automatically syncs to OneDrive alongside the '
+    'recording, consistent with other recurring meetings. The transcript should be archived '
+    'with the CCB prep documents for each session to create a readily accessible, auditable '
+    'record of board decisions for change management compliance and post-incident review.'
 )
 p = doc.add_paragraph()
 p.add_run('Effort: ').bold = True
