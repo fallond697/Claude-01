@@ -43,21 +43,23 @@ doc.add_paragraph()
 # Executive Summary
 doc.add_heading('Executive Summary', level=1)
 doc.add_paragraph(
-    'Following the February 12, 2026 CCB meeting, a post-session review identified six '
-    'process improvement opportunities. These recommendations address documentation gaps, '
-    'audit trail weaknesses, and workflow inefficiencies observed across multiple CCB cycles. '
-    'Implementation of these improvements will reduce board prep time, improve change quality, '
-    'and strengthen compliance with ISMS-STA-11.01-01.'
+    'Following the February 12, 2026 CCB meeting, a post-session review of prep documents '
+    'and the meeting transcript identified six process improvement opportunities. These '
+    'recommendations address documentation gaps, audit trail weaknesses, and workflow '
+    'inefficiencies observed across multiple CCB cycles. Implementation of these improvements '
+    'will reduce board prep time, improve change quality, and strengthen compliance with '
+    'ISMS-STA-11.01-01.'
 )
 
 # Context
 doc.add_heading('Review Context', level=1)
 doc.add_paragraph(
-    'The February 12 CCB reviewed 6 Normal change requests. Of these, '
-    '4 were assessed as Ready, 1 required board discussion (QuantaStor upgrade), and 1 was '
-    'approved as routine (athenaIDX PM). Three prep documents were generated for this session, '
-    'two of which were identical. No meeting transcript was available despite transcription '
-    'being enabled for other recurring meetings.'
+    'The February 12 CCB reviewed 6 Normal change requests plus 1 reschedule (CHG0039273). '
+    'Of these, 5 were approved, 1 was approved with full quorum vote (QuantaStor upgrade), '
+    'and 1 was rescheduled to the following week. The meeting ran approximately 25 minutes '
+    'with transcription enabled. Three prep documents were generated for this session, two '
+    'of which were identical. The meeting transcript was downloaded from the Teams meeting '
+    'recap and used as a primary source for this analysis.'
 )
 
 # Findings table
@@ -72,7 +74,7 @@ for i, h in enumerate(headers):
     summary_table.rows[0].cells[i].text = h
 
 rows_data = [
-    ('1', 'Enable meeting transcription', 'Low', 'High'),
+    ('1', 'Auto-sync transcript to OneDrive', 'Low', 'High'),
     ('2', 'Pre-screen changes with empty plans', 'Low', 'High'),
     ('3', 'Consolidate to single prep document', 'Low', 'Medium'),
     ('4', 'Standardize plan rating rubric', 'Medium', 'Medium'),
@@ -92,35 +94,40 @@ doc.add_paragraph()
 doc.add_heading('Detailed Recommendations', level=1)
 
 # Rec 1
-doc.add_heading('1. Enable Meeting Transcription', level=2)
+doc.add_heading('1. Auto-Sync Meeting Transcript to OneDrive', level=2)
 p = doc.add_paragraph()
 p.add_run('Finding: ').bold = True
 p.add_run(
-    'No Teams meeting transcript (.vtt) was generated for the February 12 CCB. Other recurring '
-    'meetings (HRIS Change Management, CMS Quality, Enterprise CM doc review) all have '
-    'transcripts synced via OneDrive. This means verbal commitments, risk acceptance rationale, '
-    'and conditional approvals from board members are not recorded.'
+    'The February 12 CCB meeting transcript was only available via manual download from the '
+    'Teams meeting recap page. Other recurring meetings (HRIS Change Management, CMS Quality, '
+    'Enterprise CM doc review) have transcripts that automatically sync to OneDrive. The root '
+    'cause is that the "Record and transcribe automatically" toggle is not enabled at the '
+    'meeting series level for the CCB meeting. Without automatic sync, the transcript is at '
+    'risk of being lost or inaccessible for audit purposes.'
 )
 p = doc.add_paragraph()
 p.add_run('Recommendation: ').bold = True
 p.add_run(
-    'Enable automatic transcription in the Teams meeting settings for the Weekly Enterprise '
-    'CCB Meeting. This creates an auditable record of board decisions, which is critical for '
-    'change management compliance and post-incident review.'
+    'Enable "Record and transcribe automatically" at the series level for the Weekly Enterprise '
+    'CCB Meeting: Teams > Calendar > right-click meeting > Edit series > Meeting options > '
+    'toggle ON. This will auto-start both recording and transcription, syncing the transcript '
+    'to OneDrive alongside the recording. The transcript should be archived with the CCB prep '
+    'documents for each session to create a readily accessible, auditable record of board '
+    'decisions for change management compliance and post-incident review.'
 )
 p = doc.add_paragraph()
 p.add_run('Effort: ').bold = True
-p.add_run('Low \u2014 Single Teams meeting setting toggle.')
+p.add_run('Low \u2014 Teams meeting or OneDrive sync setting adjustment.')
 
 # Rec 2
 doc.add_heading('2. Pre-Screen Changes with Empty Plans', level=2)
 p = doc.add_paragraph()
 p.add_run('Finding: ').bold = True
 p.add_run(
-    'Two Standard changes (CHG0039212 and CHG0039148) arrived at CCB with completely empty '
-    'Implementation, Backout, and Test plans. CHG0039212 also had "tbd" as its justification '
-    'and an entirely unanswered Risk & Impact section. These consumed board discussion time '
-    'despite being obviously incomplete.'
+    'Changes with completely empty Implementation, Backout, and Test plans have reached the '
+    'CCB agenda. In some cases, justification fields contain only "tbd" and Risk & Impact '
+    'sections are entirely unanswered. These consume board discussion time despite being '
+    'obviously incomplete.'
 )
 p = doc.add_paragraph()
 p.add_run('Recommendation: ').bold = True
@@ -272,6 +279,209 @@ p = doc.add_paragraph()
 p.add_run('Effort: ').bold = True
 p.add_run('Medium \u2014 Requires discipline to maintain weekly; could be automated from ServiceNow.')
 
+# Transcript Analysis
+doc.add_heading('Meeting Transcript Analysis', level=1)
+doc.add_paragraph(
+    'The following analysis is based on the meeting transcript downloaded from the Teams '
+    'meeting recap (February 12, 2026, 25 minutes, 12 department representatives present). '
+    'It documents what was discussed, verbal commitments made, and gaps between prep '
+    'questions and actual meeting coverage.'
+)
+
+# Changes reviewed table
+doc.add_heading('Changes Reviewed', level=2)
+changes_table = doc.add_table(rows=8, cols=5)
+changes_table.style = 'Medium Shading 1 Accent 1'
+changes_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+ch_headers = ['Change', 'Description', 'Presenter', 'Time', 'Outcome']
+for i, h in enumerate(ch_headers):
+    changes_table.rows[0].cells[i].text = h
+ch_data = [
+    ('CHG0039146', 'SF Spring \'26 Release', 'Brian Ouderkirk', '2:00-3:48', 'Approved'),
+    ('CHG0039310', 'JAMF/Tanium Mac Deploy', 'Jason Nguyen', '4:00-6:24', 'Approved'),
+    ('CHG0039298', 'athenaIDX Monthly PM', 'Melissa Ramirez', '6:24-9:33', 'Approved'),
+    ('CHG0039288', 'Server Decommission', 'Khalil Douglas', '9:33-11:31', 'Approved'),
+    ('CHG0039154', 'MOOV Email Automation', 'Bala Tadisetty', '11:31-14:35', 'Approved'),
+    ('CHG0039273', 'BGP Phase 1 (reschedule)', 'Daniele Bartoli', '14:35-16:47', 'Rescheduled to 2/17'),
+    ('CHG0039318', 'QuantaStor Upgrade', 'Michael Castro', '16:47-25:28', 'Approved (quorum vote)'),
+]
+for i, (chg, desc, presenter, time, outcome) in enumerate(ch_data):
+    row = changes_table.rows[i + 1]
+    row.cells[0].text = chg
+    row.cells[1].text = desc
+    row.cells[2].text = presenter
+    row.cells[3].text = time
+    row.cells[4].text = outcome
+
+doc.add_paragraph()
+
+# Backout discussion finding
+doc.add_heading('Finding: Backout Details Emerged Only During Discussion', level=2)
+p = doc.add_paragraph()
+p.add_run(
+    'For CHG0039318 (QuantaStor), the backout discussion revealed critical information '
+    'that was not documented in the change request:'
+)
+doc.add_paragraph(
+    'Shawn Wood (TechOps) clarified that rollback means "they rebuild the machine" \u2014 '
+    'reflashing firmware from scratch. This is a significantly more involved recovery than '
+    'implied by the CR\'s "no steps to revert."',
+    style='List Bullet'
+)
+doc.add_paragraph(
+    'Michael Castro acknowledged "I\'m not 100% certain" on whether rollback was possible, '
+    'confirming the backout plan gap identified in the prep documents.',
+    style='List Bullet'
+)
+doc.add_paragraph(
+    'Shawn Wood added context that this rebuild has only been needed once historically and '
+    'that upgrades have been "pretty clean."',
+    style='List Bullet'
+)
+p = doc.add_paragraph()
+p.add_run('Implication: ').bold = True
+p.add_run(
+    'Change owners should document the specific rollback mechanism in the CR before CCB, '
+    'especially for Moderate+ risk changes. Verbal clarifications like these should be '
+    'captured in the CR notes during or immediately after the meeting.'
+)
+
+doc.add_paragraph()
+
+# Verbal commitments
+doc.add_heading('Finding: Untracked Verbal Commitments', level=2)
+p = doc.add_paragraph()
+p.add_run(
+    'The following commitments were made verbally during the meeting. None are tracked '
+    'in a post-meeting action log:'
+)
+
+commit_table = doc.add_table(rows=8, cols=3)
+commit_table.style = 'Light List Accent 1'
+commit_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+commit_headers = ['Change', 'Commitment', 'Who']
+for i, h in enumerate(commit_headers):
+    commit_table.rows[0].cells[i].text = h
+commit_data = [
+    ('CHG0039298', 'Jose will log in after upgrade to validate', 'Melissa Ramirez'),
+    ('CHG0039298', 'Follow up with Jose on test server patching', 'Dan Fallon'),
+    ('CHG0039318', 'Send pre/post email notification to teams', 'Michael Castro'),
+    ('CHG0039318', 'Contacted Brendan, Nina, George for awareness', 'Michael Castro'),
+    ('CHG0039318', 'Will have someone verify on RCM DevOps end', 'Eric Sater'),
+    ('CHG0039318', 'Will review Laserfiche impact and test', 'Avinash Vedavyas Prabhu'),
+    ('CHG0039318', 'On-call person available for EDI validation', 'Mike Winget'),
+]
+for i, (chg, commit, who) in enumerate(commit_data):
+    row = commit_table.rows[i + 1]
+    row.cells[0].text = chg
+    row.cells[1].text = commit
+    row.cells[2].text = who
+
+doc.add_paragraph()
+p = doc.add_paragraph()
+p.add_run('Implication: ').bold = True
+p.add_run(
+    'These commitments currently exist only in the transcript. The post-CCB action log '
+    '(Recommendation #6) would provide a structured mechanism to track these to completion.'
+)
+
+doc.add_paragraph()
+
+# Prep question coverage
+doc.add_heading('Finding: Prep Question Coverage Gaps', level=2)
+p = doc.add_paragraph()
+p.add_run(
+    'The prep documents raised 25+ questions. Cross-referencing against the transcript '
+    'reveals which were addressed in the meeting and which were not:'
+)
+
+q_table = doc.add_table(rows=9, cols=4)
+q_table.style = 'Light List Accent 1'
+q_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+q_headers = ['Change', 'Prep Question', 'Asked?', 'Answer']
+for i, h in enumerate(q_headers):
+    q_table.rows[0].cells[i].text = h
+q_data = [
+    ('CHG0039310', 'Vendor support available?', 'Yes', 'Jason confirmed yes'),
+    ('CHG0039310', 'Sites/BU impacted (blank field)?', 'No', 'Not discussed'),
+    ('CHG0039298', 'Test servers patched before prod?', 'Yes', 'Confirmed done same morning'),
+    ('CHG0039298', 'OpenID authcfg scope?', 'No', 'Not discussed'),
+    ('CHG0039154', 'Excluded JobIDs \u2014 who maintains?', 'Yes', 'HCM team maintains'),
+    ('CHG0039154', 'Retroactive email updates needed?', 'Yes', 'Manual; only new users'),
+    ('CHG0039318', 'Backout/recovery path?', 'Yes', 'Fix-forward; rebuild if needed'),
+    ('CHG0039318', 'Snapshots/backups before upgrade?', 'No', 'Not discussed'),
+]
+for i, (chg, question, asked, answer) in enumerate(q_data):
+    row = q_table.rows[i + 1]
+    row.cells[0].text = chg
+    row.cells[1].text = question
+    row.cells[2].text = asked
+    row.cells[3].text = answer
+
+doc.add_paragraph()
+p = doc.add_paragraph()
+p.add_run('Implication: ').bold = True
+p.add_run(
+    'Several important prep questions went unasked during the meeting. A printed or shared '
+    'checklist during the meeting would help ensure complete coverage. Question disposition '
+    'tracking (Recommendation #5) would close this gap.'
+)
+
+doc.add_paragraph()
+
+# Positive observation
+doc.add_heading('Positive Observation: Quorum Voting on CHG0039318', level=2)
+p = doc.add_paragraph()
+p.add_run(
+    'The QuantaStor upgrade (CHG0039318) correctly went through a per-department approval '
+    'vote. Each department confirmed both approval and post-change validation availability:'
+)
+
+vote_table = doc.add_table(rows=10, cols=3)
+vote_table.style = 'Light List Accent 1'
+vote_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+vote_headers = ['Department', 'Representative', 'Validation Committed']
+for i, h in enumerate(vote_headers):
+    vote_table.rows[0].cells[i].text = h
+vote_data = [
+    ('InfoSec', 'Vinod Kashyap', 'Approved'),
+    ('TechOps', 'Shawn Wood', 'Approved'),
+    ('App Support / Business Analytics', 'Melissa Ramirez', 'Jose to validate'),
+    ('Enterprise Applications', 'Brian Ouderkirk', 'George\'s team contacted'),
+    ('Platform Integration', 'Divyarani Bhat', 'Will validate'),
+    ('RCM DevOps', 'Eric Sater', 'Someone to verify'),
+    ('Service Delivery', 'Mark White', 'Service Desk available'),
+    ('Enterprise Data', 'Avinash Vedavyas Prabhu', 'Will review Laserfiche + test'),
+    ('RCM EDI', 'Mike Winget', 'On-call available'),
+]
+for i, (dept, rep, validation) in enumerate(vote_data):
+    row = vote_table.rows[i + 1]
+    row.cells[0].text = dept
+    row.cells[1].text = rep
+    row.cells[2].text = validation
+
+doc.add_paragraph()
+p = doc.add_paragraph()
+p.add_run('Recommendation: ').bold = True
+p.add_run(
+    'This per-department vote with validation commitment is good practice. Consider '
+    'formalizing it as the standard procedure for all Moderate and higher risk changes.'
+)
+
+doc.add_paragraph()
+
+# Meeting efficiency
+doc.add_heading('Meeting Efficiency', level=2)
+p = doc.add_paragraph()
+p.add_run(
+    'The meeting was well-paced at 25 minutes for 7 agenda items. Straightforward changes '
+    '(SF release, JAMF, decommission) took 2\u20133 minutes each. The QuantaStor upgrade '
+    'appropriately consumed the most time (~9 minutes) given its Moderate risk rating and '
+    'large blast radius. No improvement needed on pacing.'
+)
+
+doc.add_paragraph()
+
 # Implementation priority
 doc.add_heading('Implementation Priority', level=1)
 doc.add_paragraph(
@@ -285,7 +495,7 @@ priority.rows[0].cells[0].text = 'Phase'
 priority.rows[0].cells[1].text = 'Recommendations'
 priority.rows[0].cells[2].text = 'Target'
 priority_data = [
-    ('Immediate', '#1 (Transcription), #3 (Consolidate docs)', 'Next CCB (Feb 19)'),
+    ('Immediate', '#1 (Transcript sync), #3 (Consolidate docs)', 'Next CCB (Feb 19)'),
     ('Short-term', '#2 (Pre-screen), #4 (Rating rubric)', 'Within 2 weeks'),
     ('Medium-term', '#5 (Question tracking), #6 (Action log)', 'Within 30 days'),
 ]
