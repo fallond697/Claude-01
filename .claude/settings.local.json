@@ -225,7 +225,9 @@
       "WebFetch(domain:office365itpros.com)",
       "Bash(taskkill:*)",
       "Bash(git -C /c/Users/FallonD/Code/Claude-01 add gen_ccb_improvements.py .claude/settings.local.json)",
-      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfeat: add transcript analysis and update CCB recommendations\n\n- Update Rec #1 to auto-sync transcript to OneDrive \\(not just enable\\)\n- Add meeting transcript analysis section with change review details\n- Add verbal commitments tracking, prep question coverage gaps\n- Document quorum voting process and meeting efficiency\n- Update executive summary and context with transcript-sourced data\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nfeat: add transcript analysis and update CCB recommendations\n\n- Update Rec #1 to auto-sync transcript to OneDrive \\(not just enable\\)\n- Add meeting transcript analysis section with change review details\n- Add verbal commitments tracking, prep question coverage gaps\n- Document quorum voting process and meeting efficiency\n- Update executive summary and context with transcript-sourced data\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff gen_ccb_improvements.py)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 commit -m \"$\\(cat <<''EOF''\nrefactor: simplify Rec #1 transcript wording to policy-level language\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   },
   "enableAllProjectMcpServers": true,
