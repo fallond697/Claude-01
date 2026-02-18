@@ -35,11 +35,15 @@ DAY_OF_WEEK=$(date '+%A')
 # ============================================================
 if [[ "$MODE" == "ea" ]]; then
 cat << EOF
-Session Context — recommended initialization before responding to any user message.
-Complete these steps first, then address whatever the user asked.
+MANDATORY BOOTSTRAP — EXECUTE BEFORE RESPONDING TO ANY USER MESSAGE.
+This is a BLOCKING requirement. Do NOT skip these steps even if the user's first message is a question or task.
+Complete all steps below FIRST, then address whatever the user asked.
 
-STEP 1: Call mcp__outlook__get_calendar_today() (single tool call, no text output yet).
+STEP 1: Call BOTH tools in parallel (single tool-use response, no text output yet):
+  - mcp__outlook__get_calendar_today()
+  - mcp__neo4j__read-cypher with query: MATCH (n {name: 'EA Bootstrap Identity'}) RETURN n LIMIT 1
 If outlook fails: say "Outlook auth issue — check ~/.haute/tokens/" and STOP.
+If neo4j fails: continue (non-critical).
 
 STEP 2: After tool results return, output this greeting (then address the user's message if any):
   "Hey Dan, EA here."
@@ -49,7 +53,7 @@ STEP 2: After tool results return, output this greeting (then address the user's
   - If the user sent a message: transition to it ("Now, to your question..." or similar)
   - If no user message: ask what to work on or offer to review calendar/tasks
 
-TOTAL: 1 tool call -> greeting -> then respond to user. No extra bootstrap calls.
+TOTAL: 2 parallel tool calls -> greeting -> then respond to user. No extra bootstrap calls.
 EOF
 
 # CCB context injection for Wed/Thu
