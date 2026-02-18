@@ -237,7 +237,15 @@
       "mcp__servicenow__get_approvals",
       "mcp__servicenow__get_attachments",
       "Bash(command -v:*)",
-      "Bash(cmd.exe /c \"echo %APPDATA%\\\\npm\\\\claude.cmd && dir \"\"%APPDATA%\\\\npm\\\\claude.cmd\"\" 2>&1\")"
+      "Bash(cmd.exe /c \"echo %APPDATA%\\\\npm\\\\claude.cmd && dir \"\"%APPDATA%\\\\npm\\\\claude.cmd\"\" 2>&1\")",
+      "Bash(NEO4J_URI=\"bolt://127.0.0.1:7687\" NEO4J_USERNAME=\"neo4j\" NEO4J_PASSWORD=\"neo4j2026\" timeout 10:*)",
+      "Bash(CLAUDECODE= claude mcp get neo4j)",
+      "Bash(CLAUDECODE= claude mcp get outlook)",
+      "Bash(CLAUDECODE= claude mcp get servicenow)",
+      "Bash(CLAUDECODE= claude mcp add neo4j -s user -- \"C:/Users/FallonD/.cache/neo4j-mcp/neo4j-mcp-v1.3.0\" -e NEO4J_URI=\"bolt://127.0.0.1:7687\" -e NEO4J_USERNAME=\"neo4j\" -e NEO4J_PASSWORD=\"neo4j2026\")",
+      "Bash(CLAUDECODE= claude mcp remove neo4j -s user)",
+      "Bash(unset:*)",
+      "Bash(systeminfo:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

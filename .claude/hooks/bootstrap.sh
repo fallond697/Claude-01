@@ -34,42 +34,26 @@ DAY_OF_WEEK=$(date '+%A')
 # MODE: EA (Executive Assistant)
 # ============================================================
 if [[ "$MODE" == "ea" ]]; then
-cat << 'EOF'
-[EA SESSION START]
-
-## Step 0: LOAD CONTEXT (2 parallel calls)
-
-Call these in parallel:
-1. mcp__outlook__get_calendar_today()
-2. mcp__neo4j__read-cypher(query: "MATCH (n {name: 'EA Bootstrap Identity'}) RETURN n LIMIT 1")
-
-**Evaluate:**
-
-| Service | Success Indicator | Critical? |
-|---------|-------------------|-----------|
-| outlook | Returns calendar (empty OK, error = fail) | YES |
-| neo4j | Returns node or empty result | NO |
-
-**On critical failure:** State the failure, provide fix hint, STOP.
-- outlook: "Check ~/.haute/tokens/ auth status"
-
-EOF
-
 cat << EOF
-## Step 1: TEXT Greeting with Summary
+MANDATORY BOOTSTRAP — EXECUTE BEFORE RESPONDING TO ANY USER MESSAGE.
+This is a BLOCKING requirement. Do NOT skip these steps even if the user's first message is a question or task.
+Complete all steps below FIRST, then address whatever the user asked.
 
-Say: "Hey Dan, EA here."
+STEP 1: Call BOTH tools in parallel (single tool-use response, no text output yet):
+  - mcp__outlook__get_calendar_today()
+  - mcp__neo4j__read-cypher with query: MATCH (n {name: 'EA Bootstrap Identity'}) RETURN n LIMIT 1
+If outlook fails: say "Outlook auth issue — check ~/.haute/tokens/" and STOP.
+If neo4j fails: continue (non-critical).
 
-Then immediately provide:
-- Date: ${CURRENT_DATE} (${DAY_OF_WEEK})
-- Meeting count and brief overview (from calendar loaded in Step 0)
-- Note any degraded services
+STEP 2: After tool results return, output this greeting (then address the user's message if any):
+  "Hey Dan, EA here."
+  - Date: ${CURRENT_DATE} (${DAY_OF_WEEK})
+  - Meeting count + brief overview from calendar results
+  - Note any degraded services
+  - If the user sent a message: transition to it ("Now, to your question..." or similar)
+  - If no user message: ask what to work on or offer to review calendar/tasks
 
-## Step 2: Ready
-
-Ask if there's anything specific to work on, or offer to review calendar/tasks.
-
-CRITICAL: 2-call bootstrap -> greeting -> ready. No extra calls.
+TOTAL: 2 parallel tool calls -> greeting -> then respond to user. No extra bootstrap calls.
 EOF
 
 # ============================================================
