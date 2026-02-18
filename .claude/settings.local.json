@@ -245,7 +245,11 @@
       "Bash(CLAUDECODE= claude mcp add neo4j -s user -- \"C:/Users/FallonD/.cache/neo4j-mcp/neo4j-mcp-v1.3.0\" -e NEO4J_URI=\"bolt://127.0.0.1:7687\" -e NEO4J_USERNAME=\"neo4j\" -e NEO4J_PASSWORD=\"neo4j2026\")",
       "Bash(CLAUDECODE= claude mcp remove neo4j -s user)",
       "Bash(unset:*)",
-      "Bash(systeminfo:*)"
+      "Bash(systeminfo:*)",
+      "Bash(test:*)",
+      "Bash(printf:*)",
+      "Bash(git -C /c/Users/FallonD/Code/Claude-01 diff .claude/hooks/bootstrap.sh)",
+      "Bash(git -C:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
