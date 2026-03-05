@@ -278,7 +278,10 @@
       "mcp__servicenow__search_kb_articles",
       "mcp__servicenow__get_kb_article",
       "Bash(mkdir:)",
-      "Bash(cmd.exe:*)"
+      "Bash(cmd.exe:*)",
+      "WebFetch(domain:itsm.tools)",
+      "WebFetch(domain:www.beyond20.com)",
+      "WebFetch(domain:www.servicenow.com)"
     ]
   },
   "enableAllProjectMcpServers": true,
