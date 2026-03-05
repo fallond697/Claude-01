@@ -281,7 +281,9 @@
       "Bash(cmd.exe:*)",
       "WebFetch(domain:itsm.tools)",
       "WebFetch(domain:www.beyond20.com)",
-      "WebFetch(domain:www.servicenow.com)"
+      "WebFetch(domain:www.servicenow.com)",
+      "Skill(hmem:l3)",
+      "Skill(hmem:para-router)"
     ]
   },
   "enableAllProjectMcpServers": true,
