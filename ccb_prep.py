@@ -63,18 +63,18 @@ p.add_run('Prepared by: ').bold = True
 p.add_run('Dan Fallon (EA)')
 p = doc.add_paragraph()
 p.add_run('Changes for Review: ').bold = True
-p.add_run('12 Normal Changes')
+p.add_run('15 Changes (12 Normal + 2 Emergency + 1 Normal new)')
 p = doc.add_paragraph()
 p.add_run('Prepared: ').bold = True
-p.add_run('March 4, 2026')
+p.add_run('March 5, 2026')
 
 # SUMMARY TABLE
 doc.add_heading('Executive Summary', level=1)
-summary_table = doc.add_table(rows=1, cols=6)
+summary_table = doc.add_table(rows=1, cols=7)
 summary_table.style = 'Light Grid Accent 1'
 summary_table.alignment = WD_TABLE_ALIGNMENT.CENTER
 hdr = summary_table.rows[0].cells
-for i, h in enumerate(['CHG #', 'Title', 'Group', 'Risk', 'Schedule', 'Ready?']):
+for i, h in enumerate(['CHG #', 'Title', 'Type', 'Group', 'Risk', 'Schedule', 'Ready?']):
     hdr[i].text = h
     for p in hdr[i].paragraphs:
         for r in p.runs:
@@ -82,18 +82,21 @@ for i, h in enumerate(['CHG #', 'Title', 'Group', 'Risk', 'Schedule', 'Ready?'])
             r.font.size = Pt(9)
 
 changes_summary = [
-    ('CHG0039420', 'Deploy Jump Server for EDI', 'Ent Sys', 'Low', '3/5 2\u20132:30PM', 'YES'),
-    ('CHG0039418', 'Abnormal - Remove Domains from Safelist', 'Infosec', 'Low', '3/10\u20133/27', 'YES'),
-    ('CHG0039415', 'Workato - Intune Out of Sync Devices', 'Ent Apps', 'Low', '3/5 8\u201310PM', 'YES'),
-    ('CHG0039414', 'Update Okta RADIUS Agent', 'Infosec', 'Low', '3/6 10\u201311AM', 'YES'),
-    ('CHG0039412', 'Upgrade Firmware on ORDC Hx', 'Ent Sys', 'Moderate', '3/11 6PM\u201312AM', 'YES*'),
-    ('CHG0039403', 'ASR Policies for PP Users (Warning)', 'Infosec', 'Moderate', '3/6 7\u201310AM', 'YES'),
-    ('CHG0039399', 'Apply Security Patches to F5 LBs', 'Ent Sys', 'Low', '3/6 6\u20138PM', 'YES'),
-    ('CHG0039383', 'Vituity Stats SharePoint Page', 'Ent Apps', 'Low', '3/5 3\u20135PM', 'YES'),
-    ('CHG0039339', 'SN to Otto Integration - Agent Alerts', 'SDO', 'Low', '3/5 3\u20134PM', 'YES'),
-    ('CHG0039284', 'Enable Otto Triage to HR & Facilities', 'SDO', 'Low', '3/10 9\u201310AM', 'YES'),
-    ('CHG0039283', 'Deactivate Forms - IT/Equip/Software', 'Ent Apps', 'Low', '3/10 9\u201310AM', 'YES'),
-    ('CHG0039213', 'New Global ServiceNow Survey', 'Ent Apps', 'Low', '3/5 4\u20136PM', 'YES'),
+    ('CHG0039430', 'CV10 Firepower Mgmt Center Upgrade', 'ECR', 'Ent Net', 'Low', '3/4 5\u20138PM (done)', 'REVIEW'),
+    ('CHG0039386', 'Upgrade trust-manager to v0.21.0', 'ECR', 'Dev-RCM', 'Low', '2/23 (done)', 'REVIEW'),
+    ('CHG0039423', 'Expose Titan SFTP to Internet', 'Normal', 'Ent Net', 'Low', '3/12 10\u201311AM', 'YES*'),
+    ('CHG0039420', 'Deploy Jump Server for EDI', 'Normal', 'Ent Sys', 'Low', '3/5 2\u20132:30PM', 'YES'),
+    ('CHG0039418', 'Abnormal - Remove Domains from Safelist', 'Normal', 'Infosec', 'Low', '3/10\u20133/27', 'YES'),
+    ('CHG0039415', 'Workato - Intune Out of Sync Devices', 'Normal', 'Ent Apps', 'Low', '3/5 8\u201310PM', 'YES'),
+    ('CHG0039414', 'Update Okta RADIUS Agent', 'Normal', 'Infosec', 'Low', '3/6 10\u201311AM', 'YES'),
+    ('CHG0039412', 'Upgrade Firmware on ORDC Hx', 'Normal', 'Ent Sys', 'Moderate', '3/11 6PM\u201312AM', 'YES*'),
+    ('CHG0039403', 'ASR Policies for PP Users (Warning)', 'Normal', 'Infosec', 'Moderate', '3/6 7\u201310AM', 'YES'),
+    ('CHG0039399', 'Apply Security Patches to F5 LBs', 'Normal', 'Ent Sys', 'Low', '3/6 6\u20138PM', 'YES'),
+    ('CHG0039383', 'Vituity Stats SharePoint Page', 'Normal', 'Ent Apps', 'Low', '3/5 3\u20135PM', 'YES'),
+    ('CHG0039339', 'SN to Otto Integration - Agent Alerts', 'Normal', 'SDO', 'Low', '3/5 3\u20134PM', 'YES'),
+    ('CHG0039284', 'Enable Otto Triage to HR & Facilities', 'Normal', 'SDO', 'Low', '3/10 9\u201310AM', 'YES'),
+    ('CHG0039283', 'Deactivate Forms - IT/Equip/Software', 'Normal', 'Ent Apps', 'Low', '3/10 9\u201310AM', 'YES'),
+    ('CHG0039213', 'New Global ServiceNow Survey', 'Normal', 'Ent Apps', 'Low', '3/5 4\u20136PM', 'YES'),
 ]
 
 for row_data in changes_summary:
@@ -104,11 +107,14 @@ for row_data in changes_summary:
         p = cell.paragraphs[0]
         if i == 0:
             add_hyperlink(p, val, chg_url(val))
-        elif i == 5:
+        elif i == 6:
             run = p.add_run(val)
             run.font.size = Pt(9)
             if val == 'NO':
                 run.font.color.rgb = RGBColor(0xCC, 0, 0)
+                run.bold = True
+            elif val == 'REVIEW':
+                run.font.color.rgb = RGBColor(0x00, 0x70, 0xC0)
                 run.bold = True
             elif val.startswith('YES*'):
                 run.font.color.rgb = RGBColor(0xCC, 0x88, 0)
@@ -116,6 +122,11 @@ for row_data in changes_summary:
             else:
                 run.font.color.rgb = RGBColor(0, 0x80, 0)
                 run.bold = True
+        elif i == 2 and val == 'ECR':
+            run = p.add_run(val)
+            run.font.size = Pt(9)
+            run.font.color.rgb = RGBColor(0xCC, 0x00, 0x00)
+            run.bold = True
         else:
             run = p.add_run(val)
             run.font.size = Pt(9)
@@ -129,15 +140,95 @@ run.italic = True
 # DETAILED REVIEWS
 doc.add_heading('Detailed Change Reviews', level=1)
 
-# --- 1. CHG0039420 ---
-doc.add_heading('1. CHG0039420 \u2014 Deploy Jump Server for EDI', level=2)
+# --- 1. CHG0039430 (EMERGENCY) ---
+doc.add_heading('1. CHG0039430 \u2014 ECR: CV10 Firepower Management Center Upgrade (EMERGENCY)', level=2)
+t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
+add_table_row(t, ['Type', 'Emergency (already implemented 3/4)'])
+add_table_row(t, ['State', 'Review'])
+add_table_row(t, ['Assignee', 'Daniel Anderson (Enterprise Networking)'])
+add_table_row(t, ['Risk / Impact', 'Low / 3 - Low'])
+add_table_row(t, ['Planned Window', '03/04 5:19 PM \u2013 8:00 PM PST (completed)'])
+add_table_row(t, ['Server', 'rcm-srvfmc (10.10.248.75)'])
+add_table_row(t, ['Version', '7.4.2.3 \u2192 7.4.6 (title says 7.6.4 \u2014 discrepancy)'])
+add_table_row(t, ['Description', 'Upgrade Firepower Management Center to resolve critical Cisco vulnerabilities (auth bypass + RCE). No traffic disruption.'])
+doc.add_paragraph('')
+p = doc.add_paragraph(); p.add_run('Plan Assessment:').bold = True
+t2 = doc.add_table(rows=0, cols=2); t2.style = 'Light Grid Accent 1'
+add_table_row(t2, ['Implementation', 'OK \u2014 Backup FMC, save copy, upgrade via Cog menu'])
+add_table_row(t2, ['Backout', 'OK \u2014 Downgrade to 7.4.2.3 or restore backup'])
+add_table_row(t2, ['Test', 'OK \u2014 Verify reachability, firewall management, config push'])
+add_table_row(t2, ['Risk Analysis', 'OK \u2014 Business-critical: Yes, no PHI/PII, 1hr outage, QA tested'])
+doc.add_paragraph('')
+p = doc.add_paragraph(); p.add_run('CCB Questions:').bold = True
+doc.add_paragraph('Title says "7.6.4" but implementation says "7.4.6" \u2014 which version was actually deployed?', style='List Bullet')
+doc.add_paragraph('Two critical Cisco advisories (auth bypass + RCE) \u2014 were these actively exploited or detected in scans?', style='List Bullet')
+doc.add_paragraph('Was the upgrade completed successfully? Any issues encountered?', style='List Bullet')
+doc.add_paragraph('Version field not filled in \u2014 please confirm prior and new versions for the record.', style='List Bullet')
+p = doc.add_paragraph()
+run = p.add_run('Recommendation: REVIEW / RATIFY (Emergency already executed)'); run.bold = True; run.font.color.rgb = RGBColor(0x00, 0x70, 0xC0)
+
+# --- 2. CHG0039386 (EMERGENCY) ---
+doc.add_heading('2. CHG0039386 \u2014 Upgrade trust-manager to v0.21.0 (EMERGENCY)', level=2)
+t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
+add_table_row(t, ['Type', 'Emergency (implemented 2/23)'])
+add_table_row(t, ['State', 'Scheduled'])
+add_table_row(t, ['Assignee', 'Stefan Nuxoll (Development - RCM)'])
+add_table_row(t, ['Risk / Impact', 'Low / 3 - Low'])
+add_table_row(t, ['Planned Window', '02/23 10:00 AM \u2013 12:00 PM PST (completed)'])
+add_table_row(t, ['Version', 'v0.16.1 \u2192 v0.21.0 (trust-manager on AKS clusters)'])
+add_table_row(t, ['Description', 'Upgrade trust-manager on platform AKS clusters. Updated ca-certificates bundle to resolve PDRS accessing Athena IDX.'])
+doc.add_paragraph('')
+p = doc.add_paragraph(); p.add_run('Plan Assessment:').bold = True
+t2 = doc.add_table(rows=0, cols=2); t2.style = 'Light Grid Accent 1'
+add_table_row(t2, ['Implementation', 'OK \u2014 Bump chart version in Application resource'])
+add_table_row(t2, ['Backout', 'OK \u2014 Revert to v0.19.0; trigger: controller errors or bundle failure'])
+add_table_row(t2, ['Test', 'OK \u2014 Verify cert bundles updated, PDRS functions correctly'])
+add_table_row(t2, ['Risk Analysis', 'OK \u2014 Business-critical: Yes, PHI/PII: Yes, 0 outage, HA: Yes, RCM only'])
+doc.add_paragraph('')
+p = doc.add_paragraph(); p.add_run('CCB Questions:').bold = True
+doc.add_paragraph('Implemented 2/23 (10 days ago) \u2014 is PDRS now functioning correctly with Athena IDX?', style='List Bullet')
+doc.add_paragraph('Backout references v0.19.0 but prior version is v0.16.1 \u2014 was there an intermediate upgrade?', style='List Bullet')
+doc.add_paragraph('Related to PRB0040988 (PDRS outage retrospective)?', style='List Bullet')
+doc.add_paragraph('State is "Scheduled" not "Review" \u2014 should this be advanced?', style='List Bullet')
+p = doc.add_paragraph()
+run = p.add_run('Recommendation: REVIEW / RATIFY (Emergency already executed)'); run.bold = True; run.font.color.rgb = RGBColor(0x00, 0x70, 0xC0)
+
+# --- 3. CHG0039423 ---
+doc.add_heading('3. CHG0039423 \u2014 Expose Titan SFTP to Internet', level=2)
+t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
+add_table_row(t, ['Assignee', 'Daniel Anderson (Enterprise Networking)'])
+add_table_row(t, ['Requested By', 'Daniel Anderson'])
+add_table_row(t, ['Risk / Impact', 'Low / 3 - Low'])
+add_table_row(t, ['Planned Window', '03/12 10:00 AM \u2013 11:00 AM PST (1 hour)'])
+add_table_row(t, ['Device', 'pdx-edgefw01 (10.100.25.103) \u2014 edge firewall'])
+add_table_row(t, ['IPs Removed', '12.229.56.194, 148.66.225.28 (Vituity IP restrictions)'])
+add_table_row(t, ['Description', 'Remove Vituity IP restrictions from Titan SFTP firewall rule, exposing service to the internet. Replaces CornerStone SFTP.'])
+doc.add_paragraph('')
+p = doc.add_paragraph(); p.add_run('Plan Assessment:').bold = True
+t2 = doc.add_table(rows=0, cols=2); t2.style = 'Light Grid Accent 1'
+add_table_row(t2, ['Implementation', 'OK \u2014 Navigate to EXT-sFTP-TITAN policy, remove source IPs, commit'])
+add_table_row(t2, ['Backout', 'OK \u2014 Re-add the two IPs to source address, commit'])
+add_table_row(t2, ['Test', 'OK \u2014 Systems team tests access and directory layout'])
+add_table_row(t2, ['Risk Analysis', 'PARTIAL \u2014 Business-critical: Yes, PHI/PII: Yes, SAR question unanswered'])
+doc.add_paragraph('')
+p = doc.add_paragraph(); p.add_run('CCB Questions:').bold = True
+doc.add_paragraph('This exposes SFTP to the entire internet \u2014 what authentication/security controls remain (SSH keys, MFA, IP allowlisting at app layer)?', style='List Bullet')
+doc.add_paragraph('PHI/PII marked Yes \u2014 what data flows through Titan SFTP? Encrypted at rest and in transit?', style='List Bullet')
+doc.add_paragraph('SAR question is unanswered \u2014 has a Security Architecture Review been completed given internet exposure?', style='List Bullet')
+doc.add_paragraph('Is CornerStone being decommissioned or running in parallel?', style='List Bullet')
+doc.add_paragraph('Vendor support says "No: Standard Change" \u2014 this is Normal, not Standard. Copy/paste error?', style='List Bullet')
+p = doc.add_paragraph()
+run = p.add_run('Recommendation: AUTHORIZE WITH DISCUSSION \u2014 Internet exposure of PHI/PII-bearing SFTP warrants security review. SAR missing.'); run.bold = True; run.font.color.rgb = RGBColor(0xCC, 0x88, 0)
+
+# --- 4. CHG0039420 ---
+doc.add_heading('4. CHG0039420 \u2014 Deploy Jump Server for EDI', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Michael Castro (Enterprise Systems)'])
 add_table_row(t, ['Requested By', 'Michael Castro'])
 add_table_row(t, ['Risk / Impact', 'Low / 3 - Low'])
 add_table_row(t, ['Planned Window', '03/05 2:00 PM \u2013 2:30 PM PST (30 min)'])
 add_table_row(t, ['Server', 'RCM-SRVJUMPEDI (Modesto, DHCP)'])
-add_table_row(t, ['Description', 'Deploy a new jump server VM in Modesto for EDI team to RDP into systems blocked by Illumio rules. Discovered during DR testing.'])
+add_table_row(t, ['Description', 'Deploy a new jump server VM in Modesto for EDI team to RDP into systems blocked by Illumio rules. Discovered during DR testing. Backup: weekly (matching other jump servers). Illumio policies to be updated.'])
 doc.add_paragraph('')
 p = doc.add_paragraph(); p.add_run('Plan Assessment:').bold = True
 t2 = doc.add_table(rows=0, cols=2); t2.style = 'Light Grid Accent 1'
@@ -154,8 +245,8 @@ doc.add_paragraph('Will the 5 named users have local admin or standard user acce
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 2. CHG0039418 ---
-doc.add_heading('2. CHG0039418 \u2014 Abnormal - Remove Domains from Safelist', level=2)
+# --- 5. CHG0039418 ---
+doc.add_heading('5. CHG0039418 \u2014 Abnormal - Remove Domains from Safelist', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Bill Carter (Infosec)'])
 add_table_row(t, ['Requested By', 'Bill Carter'])
@@ -178,8 +269,8 @@ doc.add_paragraph('What was the false positive rate in the 5-domain test?', styl
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 3. CHG0039415 ---
-doc.add_heading('3. CHG0039415 \u2014 Workato: Intune Out of Sync Device Notifications', level=2)
+# --- 6. CHG0039415 ---
+doc.add_heading('6. CHG0039415 \u2014 Workato: Intune Out of Sync Device Notifications', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Pallav Malu (Enterprise Applications)'])
 add_table_row(t, ['Requested By', 'David Chu'])
@@ -201,8 +292,8 @@ doc.add_paragraph('Are shared/kiosk devices excluded from the notification crite
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 4. CHG0039414 ---
-doc.add_heading('4. CHG0039414 \u2014 Update Okta RADIUS Agent', level=2)
+# --- 7. CHG0039414 ---
+doc.add_heading('7. CHG0039414 \u2014 Update Okta RADIUS Agent', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Jeffrey How (Infosec)'])
 add_table_row(t, ['Requested By', 'Jeffrey How'])
@@ -226,8 +317,8 @@ doc.add_paragraph('Are the servers being patched for OS vulnerabilities at the s
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 5. CHG0039412 ---
-doc.add_heading('5. CHG0039412 \u2014 Upgrade Firmware on ORDC Hx', level=2)
+# --- 8. CHG0039412 ---
+doc.add_heading('8. CHG0039412 \u2014 Upgrade Firmware on ORDC Hx', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Philip Weiss (Enterprise Systems)'])
 add_table_row(t, ['Requested By', 'Philip Weiss'])
@@ -262,8 +353,8 @@ doc.add_paragraph('ESXi prior version field is incomplete ("7.0.3, 24784741 ->")
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE WITH DISCUSSION \u2014 Backout limitations and scope warrant CCB discussion.'); run.bold = True; run.font.color.rgb = RGBColor(0xCC, 0x88, 0)
 
-# --- 6. CHG0039403 ---
-doc.add_heading('6. CHG0039403 \u2014 ASR Policies for PP Department Users (Warning Mode)', level=2)
+# --- 9. CHG0039403 ---
+doc.add_heading('9. CHG0039403 \u2014 ASR Policies for PP Department Users (Warning Mode)', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Chintan Myakal (Infosec)'])
 add_table_row(t, ['Requested By', 'Chintan Myakal'])
@@ -288,8 +379,8 @@ doc.add_paragraph('Is there a communication plan to PP users about the warning p
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 7. CHG0039399 ---
-doc.add_heading('7. CHG0039399 \u2014 Apply Security Patches to F5 Load Balancers', level=2)
+# --- 10. CHG0039399 ---
+doc.add_heading('10. CHG0039399 \u2014 Apply Security Patches to F5 Load Balancers', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Philip Weiss (Enterprise Systems)'])
 add_table_row(t, ['Requested By', 'Philip Weiss'])
@@ -313,8 +404,8 @@ doc.add_paragraph('PHI/PII marked Yes \u2014 because F5 handles SSL termination 
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 8. CHG0039383 ---
-doc.add_heading('8. CHG0039383 \u2014 Vituity Stats SharePoint Page', level=2)
+# --- 11. CHG0039383 ---
+doc.add_heading('11. CHG0039383 \u2014 Vituity Stats SharePoint Page', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'DivyaRani Bhat (Enterprise Applications)'])
 add_table_row(t, ['Requested By', 'Amy Hughes'])
@@ -336,8 +427,8 @@ doc.add_paragraph('Who will have access to the SharePoint page \u2014 all Vitans
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 9. CHG0039339 ---
-doc.add_heading('9. CHG0039339 \u2014 ServiceNow to Otto Integration - Agent Alerts', level=2)
+# --- 12. CHG0039339 ---
+doc.add_heading('12. CHG0039339 \u2014 ServiceNow to Otto Integration - Agent Alerts', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Dan Spengler (Service Delivery Optimization)'])
 add_table_row(t, ['Requested By', 'Dan Spengler'])
@@ -360,8 +451,8 @@ doc.add_paragraph('Vendor support not during change \u2014 risk if prod behaves 
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 10. CHG0039284 ---
-doc.add_heading('10. CHG0039284 \u2014 Enable Otto Triage to HR & Facilities', level=2)
+# --- 13. CHG0039284 ---
+doc.add_heading('13. CHG0039284 \u2014 Enable Otto Triage to HR & Facilities', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Beth Vanderheiden (Service Delivery Optimization)'])
 add_table_row(t, ['Requested By', 'Mark White'])
@@ -383,8 +474,8 @@ doc.add_paragraph('What is the expected ticket volume to these new groups?', sty
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 11. CHG0039283 ---
-doc.add_heading('11. CHG0039283 \u2014 Deactivate Forms: IT Request, Equipment, Software', level=2)
+# --- 14. CHG0039283 ---
+doc.add_heading('14. CHG0039283 \u2014 Deactivate Forms: IT Request, Equipment, Software', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Beth Vanderheiden (Enterprise Applications)'])
 add_table_row(t, ['Requested By', 'Mark White'])
@@ -406,8 +497,8 @@ doc.add_paragraph('IT Request replaced by incidents \u2014 does Service Desk hav
 p = doc.add_paragraph()
 run = p.add_run('Recommendation: AUTHORIZE'); run.bold = True; run.font.color.rgb = RGBColor(0, 0x80, 0)
 
-# --- 12. CHG0039213 ---
-doc.add_heading('12. CHG0039213 \u2014 New Global ServiceNow Survey', level=2)
+# --- 15. CHG0039213 ---
+doc.add_heading('15. CHG0039213 \u2014 New Global ServiceNow Survey', level=2)
 t = doc.add_table(rows=0, cols=2); t.style = 'Light Grid Accent 1'
 add_table_row(t, ['Assignee', 'Beth Vanderheiden (Enterprise Applications)'])
 add_table_row(t, ['Requested By', 'Mark White'])
@@ -442,6 +533,9 @@ for i, h in enumerate(['CHG #', 'Title', 'Recommendation']):
             r.bold = True; r.font.size = Pt(9)
 
 recs = [
+    ('CHG0039430', 'CV10 Firepower Mgmt Center Upgrade (ECR)', 'REVIEW / RATIFY', '0070C0'),
+    ('CHG0039386', 'Upgrade trust-manager v0.21.0 (ECR)', 'REVIEW / RATIFY', '0070C0'),
+    ('CHG0039423', 'Expose Titan SFTP to Internet', 'AUTHORIZE WITH DISCUSSION', 'CC8800'),
     ('CHG0039420', 'Deploy Jump Server for EDI', 'AUTHORIZE', '00802B'),
     ('CHG0039418', 'Abnormal - Remove Domains from Safelist', 'AUTHORIZE', '00802B'),
     ('CHG0039415', 'Workato - Intune Out of Sync Devices', 'AUTHORIZE', '00802B'),
@@ -469,8 +563,10 @@ for chg, title, rec, color in recs:
 
 doc.add_paragraph('')
 p = doc.add_paragraph(); p.add_run('Key Takeaways:').bold = True
-doc.add_paragraph('11 of 12 changes ready for authorization', style='List Bullet')
-doc.add_paragraph('1 change (CHG0039412) is highest-risk, warrants CCB discussion on backout limitations', style='List Bullet')
+doc.add_paragraph('15 total changes: 12 Normal + 2 Emergency + 1 new Normal', style='List Bullet')
+doc.add_paragraph('11 Normal changes ready for straight authorization', style='List Bullet')
+doc.add_paragraph('2 Emergencies for review/ratification (CHG0039430, CHG0039386 \u2014 already implemented)', style='List Bullet')
+doc.add_paragraph('2 warrant CCB discussion: CHG0039423 (internet SFTP exposure, SAR missing) and CHG0039412 (HyperFlex backout limitations)', style='List Bullet')
 doc.add_paragraph('5 changes scheduled same day as CCB (3/5) \u2014 all after 1 PM PST', style='List Bullet')
 doc.add_paragraph('2 changes have Moderate risk (CHG0039412, CHG0039403)', style='List Bullet')
 
