@@ -283,7 +283,11 @@
       "WebFetch(domain:www.beyond20.com)",
       "WebFetch(domain:www.servicenow.com)",
       "Skill(hmem:l3)",
-      "Skill(hmem:para-router)"
+      "Skill(hmem:para-router)",
+      "Bash(wmic cpu:*)",
+      "Bash(wmic OS:*)",
+      "Bash(wmic computersystem:*)",
+      "Bash(wmic memorychip:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
