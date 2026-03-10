@@ -287,7 +287,9 @@
       "Bash(wmic cpu:*)",
       "Bash(wmic OS:*)",
       "Bash(wmic computersystem:*)",
-      "Bash(wmic memorychip:*)"
+      "Bash(wmic memorychip:*)",
+      "mcp__sharepoint__read_excel_file",
+      "Bash(explorer.exe:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
