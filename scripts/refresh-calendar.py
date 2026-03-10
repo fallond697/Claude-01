@@ -208,20 +208,20 @@ def main():
         json.dump(changes, f, indent=2)
     log(f"Cache saved: {CACHE_FILE}")
 
-    # Regenerate Excel
-    log("Regenerating calendar Excel...")
-    calendar_script = os.path.join(SCRIPT_DIR, "create-calendar-only.py")
+    # Regenerate Excel + HTML
     import subprocess
-    result = subprocess.run(
-        [sys.executable, calendar_script],
-        capture_output=True, text=True, cwd=SCRIPT_DIR,
-    )
-    if result.returncode == 0:
-        for line in result.stdout.strip().split("\n"):
-            log(f"  {line}")
-    else:
-        log(f"ERROR generating Excel: {result.stderr}")
-        sys.exit(1)
+    for label, script_name in [("Excel", "create-calendar-only.py"), ("HTML", "create-calendar-html.py")]:
+        log(f"Regenerating {label}...")
+        script = os.path.join(SCRIPT_DIR, script_name)
+        result = subprocess.run(
+            [sys.executable, script],
+            capture_output=True, text=True, cwd=SCRIPT_DIR,
+        )
+        if result.returncode == 0:
+            for line in result.stdout.strip().split("\n"):
+                log(f"  {line}")
+        else:
+            log(f"ERROR generating {label}: {result.stderr}")
 
     log("Calendar refresh complete")
 
