@@ -14,32 +14,9 @@ from pathlib import Path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 INSTANCE_URL = "https://vituity.service-now.com"
 TOKEN_FILE = os.path.join(Path.home(), ".servicenow-mcp", "tokens.json")
+CLIENT_ID = "REDACTED_CLIENT_ID"
+CLIENT_SECRET = r"REDACTED_CLIENT_SECRET"
 CACHE_FILE = os.path.join(SCRIPT_DIR, "calendar_changes.json")
-
-
-def _load_sn_credentials():
-    """Load ServiceNow OAuth client credentials from env vars or tokens file."""
-    client_id = os.environ.get("SN_CLIENT_ID")
-    client_secret = os.environ.get("SN_CLIENT_SECRET")
-    if client_id and client_secret:
-        return client_id, client_secret
-    # Fallback: read from tokens file
-    try:
-        with open(TOKEN_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        inst = data.get(INSTANCE_URL, {})
-        client_id = inst.get("clientId", "")
-        client_secret = inst.get("clientSecret", "")
-        if client_id and client_secret:
-            return client_id, client_secret
-    except (FileNotFoundError, json.JSONDecodeError):
-        pass
-    raise RuntimeError(
-        "ServiceNow OAuth credentials not found. "
-        "Set SN_CLIENT_ID and SN_CLIENT_SECRET env vars, "
-        f"or add clientId/clientSecret to {TOKEN_FILE}"
-    )
-
 EXCLUDE_STATES = {"Canceled", "New", "Assess"}
 
 LOG_FILE = os.path.join(SCRIPT_DIR, "refresh-calendar.log")
@@ -70,11 +47,10 @@ def save_tokens(tokens):
 def refresh_token(tokens):
     """Refresh expired access token using refresh_token grant."""
     log("Refreshing access token...")
-    client_id, client_secret = _load_sn_credentials()
     params = urllib.parse.urlencode({
         "grant_type": "refresh_token",
-        "client_id": client_id,
-        "client_secret": client_secret,
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
         "refresh_token": tokens["refreshToken"],
     }).encode("utf-8")
 
@@ -145,7 +121,7 @@ def main():
 
     # Query last 30 days + upcoming 2 weeks
     today = datetime.now()
-    start_date = today - timedelta(days=42)
+    start_date = today - timedelta(days=30)
     end_date = today + timedelta(days=14)
 
     # State codes: -5=New, -4=Assess, -3=Authorize, -2=Scheduled, -1=Implement,
@@ -227,101 +203,27 @@ def main():
 
     log(f"Processed {len(changes)} changes (after dedup/filter)")
 
-    # Count new changes since last refresh
-    previous_numbers = set()
-    if os.path.exists(CACHE_FILE):
-        try:
-            with open(CACHE_FILE, "r", encoding="utf-8") as f:
-                previous = json.load(f)
-            previous_numbers = {c.get("number") for c in previous}
-        except (json.JSONDecodeError, KeyError):
-            pass
-    new_changes = [c for c in changes if c["number"] not in previous_numbers]
-    new_count = len(new_changes)
-    log(f"  {new_count} new changes since last refresh")
-
     # Save cache
     with open(CACHE_FILE, "w", encoding="utf-8") as f:
         json.dump(changes, f, indent=2)
     log(f"Cache saved: {CACHE_FILE}")
 
-    # Regenerate Excel + HTML
+    # Regenerate Excel
+    log("Regenerating calendar Excel...")
+    calendar_script = os.path.join(SCRIPT_DIR, "create-calendar-only.py")
     import subprocess
-    for label, script_name in [("Excel", "create-calendar-only.py"), ("HTML", "create-calendar-html.py")]:
-        log(f"Regenerating {label}...")
-        script = os.path.join(SCRIPT_DIR, script_name)
-        result = subprocess.run(
-            [sys.executable, script],
-            capture_output=True, text=True, cwd=SCRIPT_DIR,
-        )
-        if result.returncode == 0:
-            for line in result.stdout.strip().split("\n"):
-                log(f"  {line}")
-        else:
-            log(f"ERROR generating {label}: {result.stderr}")
-
-    # Post notification to Teams via Graph API
-    log("Posting notification to Teams...")
-    try:
-        post_teams_notification(len(changes), new_count)
-    except Exception as e:
-        log(f"ERROR posting to Teams: {e}")
+    result = subprocess.run(
+        [sys.executable, calendar_script],
+        capture_output=True, text=True, cwd=SCRIPT_DIR,
+    )
+    if result.returncode == 0:
+        for line in result.stdout.strip().split("\n"):
+            log(f"  {line}")
+    else:
+        log(f"ERROR generating Excel: {result.stderr}")
+        sys.exit(1)
 
     log("Calendar refresh complete")
-
-
-def post_teams_notification(change_count, new_count):
-    """Post a calendar update notification with link to Teams channel via Graph API."""
-    import msal as _msal
-
-    TENANT_ID = os.environ.get("AZURE_TENANT_ID", "56b24b68-e3c8-4895-89a0-05a74d0f8c84")
-    MSAL_CLIENT_ID = os.environ.get("MSAL_CLIENT_ID", "ff4acc71-0fd8-459d-afda-0ec31f2e7bab")
-    MSAL_TOKEN_CACHE = os.environ.get(
-        "MSAL_TOKEN_CACHE",
-        os.path.join(Path.home(), ".email_ingest", "vituity_token_cache.json"),
-    )
-    GROUP_ID = os.environ.get("TEAMS_GROUP_ID", "fb1fa849-3b0d-4d15-a72f-f1b56d60186a")
-    CHANNEL_ID = os.environ.get("TEAMS_CHANNEL_ID", "19:77c7ce1868b546108d5e77c65eff8a3b@thread.skype")
-    CALENDAR_URL = "https://vituity.sharepoint.com/sites/PM-ITSEngineering-DEPT/Shared%20Documents/CCB/Change_Management_Calendar.html"
-    SN_DASHBOARD = "https://vituity.service-now.com/now/platform-analytics-workspace/dashboards/params/edit/false/sys-id/27df42dbe6770153e1186e1215e19ffb"
-
-    cache = _msal.SerializableTokenCache()
-    cache.deserialize(Path(MSAL_TOKEN_CACHE).read_text())
-    app = _msal.PublicClientApplication(
-        MSAL_CLIENT_ID,
-        authority=f"https://login.microsoftonline.com/{TENANT_ID}",
-        token_cache=cache,
-    )
-    accounts = app.get_accounts()
-    result = app.acquire_token_silent(["Group.ReadWrite.All", "ChannelMessage.Send"], account=accounts[0])
-    if not result or "access_token" not in result:
-        result = app.acquire_token_silent(["Group.ReadWrite.All"], account=accounts[0])
-    token = result["access_token"]
-
-    date_str = datetime.now().strftime("%B %d, %Y")
-    new_text = f'<strong>{new_count}</strong> new change{"s" if new_count != 1 else ""} added since yesterday' if new_count > 0 else 'No new changes since yesterday'
-    html = (
-        f'<p style="margin:6px 0;font-size:14px">'
-        f'Change Management Calendar updated &mdash; {new_text}.</p>'
-        f'<p style="margin:4px 0">'
-        f'<a href="{SN_DASHBOARD}">Open Calendar in ServiceNow</a>'
-        f'</p>'
-    )
-
-    import urllib.request
-    msg = json.dumps({"body": {"contentType": "html", "content": html}}).encode("utf-8")
-    req = urllib.request.Request(
-        f"https://graph.microsoft.com/v1.0/teams/{GROUP_ID}/channels/{CHANNEL_ID}/messages",
-        data=msg,
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-        },
-        method="POST",
-    )
-    with urllib.request.urlopen(req) as resp:
-        status = resp.status
-    log(f"  Teams notification posted (HTTP {status})")
 
 
 if __name__ == "__main__":
