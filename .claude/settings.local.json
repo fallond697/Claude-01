@@ -329,7 +329,10 @@
       "Read(//c/Program Files/Microsoft/Edge/Application/**)",
       "Bash(find ~/Code/HT-080-protocol-droid/src -type f \\\\\\( -name \"*.ts\" \\\\\\) 2>/dev/null | head -20)",
       "Bash(wc -l ~/Code/HT-085-change-mgmt/*.py | tail -1 && echo \"\" && find ~/Code/HT-085-change-mgmt -maxdepth 1 -name \"*.py\" -type f | wc -l && echo \"Python scripts total\")",
-      "Bash(cd ~/Code/HT-095-digital-twin && wc -l packages/*/src/*.ts | sort -rn | head -15)"
+      "Bash(cd ~/Code/HT-095-digital-twin && wc -l packages/*/src/*.ts | sort -rn | head -15)",
+      "Bash(npm list:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(API_KEY=\"d70112659d979f4baa6c3ecad2bbf7f12d5f1bdafd5b30d8728a91dc18da1c49\"\ncurl -s -H \"Authorization: Bearer $API_KEY\" \"http://127.0.0.1:27123/vault/Areas/change-management/\" 2>/dev/null)"
     ]
   },
   "enableAllProjectMcpServers": true,
