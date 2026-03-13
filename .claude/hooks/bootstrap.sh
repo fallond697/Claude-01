@@ -39,11 +39,8 @@ MANDATORY BOOTSTRAP — EXECUTE BEFORE RESPONDING TO ANY USER MESSAGE.
 This is a BLOCKING requirement. Do NOT skip these steps even if the user's first message is a question or task.
 Complete all steps below FIRST, then address whatever the user asked.
 
-STEP 1: Call BOTH tools in parallel (single tool-use response, no text output yet):
-  - mcp__outlook__get_calendar_today()
-  - mcp__neo4j__read-cypher with query: MATCH (n {name: 'EA Bootstrap Identity'}) RETURN n LIMIT 1
+STEP 1: Call mcp__outlook__get_calendar_today() (single tool call, no text output yet).
 If outlook fails: say "Outlook auth issue — check ~/.haute/tokens/" and STOP.
-If neo4j fails: continue (non-critical).
 
 STEP 2: After tool results return, output this greeting (then address the user's message if any):
   "Hey Dan, EA here."
@@ -53,8 +50,33 @@ STEP 2: After tool results return, output this greeting (then address the user's
   - If the user sent a message: transition to it ("Now, to your question..." or similar)
   - If no user message: ask what to work on or offer to review calendar/tasks
 
-TOTAL: 2 parallel tool calls -> greeting -> then respond to user. No extra bootstrap calls.
+TOTAL: 1 tool call -> greeting -> then respond to user. No extra bootstrap calls.
 EOF
+
+# CCB context injection for Wed/Thu
+if [[ "$DAY_OF_WEEK" == "Wednesday" ]]; then
+cat << 'EOF'
+
+## Digital Twin — CCB Wednesday Context
+It's **Wednesday** — CCB prep day. After greeting, proactively offer:
+- "It's CCB prep day. Want me to run `/ccb-prep` to fetch changes and generate the prep doc?"
+- If user declines, proceed normally
+- If HT-095-digital-twin/ exists, the CcbPipeline can orchestrate the full Wednesday workflow
+- Key scripts: fetch_ccb_changes.py → gen_ccb_prep.py → gen_ccb_dashboard.py → notify_owners.py
+- Deadline: Changes must be at Assess with CAB Date by 3 PM PST today
+EOF
+elif [[ "$DAY_OF_WEEK" == "Thursday" ]]; then
+cat << 'EOF'
+
+## Digital Twin — CCB Thursday Context
+It's **Thursday** — CCB meeting day (1 PM PST). After greeting, proactively offer:
+- Before 1 PM: "CCB is at 1 PM. Want me to run `/ccb-review` to check for changes since yesterday?"
+- After 1 PM: "CCB just wrapped. Ready to run `/ccb-minutes` to capture decisions?"
+- If HT-095-digital-twin/ exists, the CcbPipeline can orchestrate the full Thursday workflow
+- Re-fetch changes and diff against Wednesday cache for any state transitions
+- Post-meeting: record decisions, generate minutes, capture to Obsidian + Neo4j
+EOF
+fi
 
 # ============================================================
 # MODE: JERVAIS (Sardonic Coding Assistant)
