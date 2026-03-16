@@ -341,7 +341,12 @@
       "Read(//c/Users/FallonD/**)",
       "Bash(ls /c/neo4j*)",
       "Bash(echo \"RETURN 1\" | ~/.cache/neo4j-mcp/neo4j-mcp-v1.3.0 2>&1 | head -5; echo \"---\"; curl -s http://127.0.0.1:7474/db/neo4j/tx -u neo4j:neo4j -H \"Content-Type: application/json\" -d '{\"statements\":[{\"statement\":\"RETURN 1 AS test\"}]}' 2>&1 | head -5)",
-      "Bash(pac:*)"
+      "Bash(pac:*)",
+      "Bash(cd ~/Code/HT-095-digital-twin && sed -i \"s|/c/Users/FallonD|C:/Users/FallonD|\" /tmp/validate-exceptions.mjs && node /tmp/validate-exceptions.mjs 2>&1)",
+      "mcp__obsidian__obsidian_update_note",
+      "Bash(\"/c/Users/FallonD/Downloads/Setup.Microsoft.PowerAutomate.exe\" --help 2>&1 | head -30 || \"/c/Users/FallonD/Downloads/Setup.Microsoft.PowerAutomate.exe\" /? 2>&1 | head -30 || echo \"No help output\")",
+      "Bash(cd ~/Code/HT-085-change-mgmt && rm ccb_changes_cache.json && /c/Python314/python fetch_ccb_changes.py 2>&1)",
+      "mcp__teams__get_presence"
     ]
   },
   "enableAllProjectMcpServers": true,
