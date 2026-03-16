@@ -332,7 +332,16 @@
       "Bash(cd ~/Code/HT-095-digital-twin && wc -l packages/*/src/*.ts | sort -rn | head -15)",
       "Bash(npm list:*)",
       "WebFetch(domain:www.npmjs.com)",
-      "Bash(API_KEY=\"d70112659d979f4baa6c3ecad2bbf7f12d5f1bdafd5b30d8728a91dc18da1c49\"\ncurl -s -H \"Authorization: Bearer $API_KEY\" \"http://127.0.0.1:27123/vault/Areas/change-management/\" 2>/dev/null)"
+      "Bash(API_KEY=\"d70112659d979f4baa6c3ecad2bbf7f12d5f1bdafd5b30d8728a91dc18da1c49\"\ncurl -s -H \"Authorization: Bearer $API_KEY\" \"http://127.0.0.1:27123/vault/Areas/change-management/\" 2>/dev/null)",
+      "Bash(find \"/c/Users/FallonD/Code/HT-095-digital-twin/packages\" -type f \\\\\\( -name \"*.ts\" -o -name \"package.json\" -o -name \"tsconfig.json\" \\\\\\) 2>/dev/null | grep -v node_modules | sort)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/FallonD/Code/Claude-01/packages/$pkg/**)",
+      "Bash(cd ~/Code/HT-095-digital-twin && mkdir -p packages/agent-twin/src/__tests__ packages/knowledge-twin/src/__tests__ packages/process-twin/src/__tests__)",
+      "Read(//c//**)",
+      "Read(//c/Users/FallonD/**)",
+      "Bash(ls /c/neo4j*)",
+      "Bash(echo \"RETURN 1\" | ~/.cache/neo4j-mcp/neo4j-mcp-v1.3.0 2>&1 | head -5; echo \"---\"; curl -s http://127.0.0.1:7474/db/neo4j/tx -u neo4j:neo4j -H \"Content-Type: application/json\" -d '{\"statements\":[{\"statement\":\"RETURN 1 AS test\"}]}' 2>&1 | head -5)",
+      "Bash(pac:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
