@@ -614,13 +614,13 @@
     "number": "CHG0039384",
     "short_description": "Delinea Secret Server High Availability",
     "type": "Normal",
-    "state": "Scheduled",
+    "state": "Review",
     "assignment_group": "Enterprise Systems",
     "assigned_to": "Melvin Mah",
     "planned_start": "2026-03-02",
     "planned_end": "2026-03-14",
     "cmdb_ci": "Secret Server Request",
-    "close_code": "",
+    "close_code": "Successful",
     "priority": "4 - Low"
   },
   {
@@ -1027,6 +1027,19 @@
     "priority": "4 - Low"
   },
   {
+    "number": "CHG0039473",
+    "short_description": "Active AAD PowerShell password spray and close CA policy gap",
+    "type": "Emergency",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Systems",
+    "assigned_to": "Khalil Douglas",
+    "planned_start": "2026-03-12",
+    "planned_end": "2026-03-12",
+    "cmdb_ci": "Security Remediation",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
     "number": "CHG0039439",
     "short_description": "Update email delivery in LEAP 55 integration (VITUITY_LEAP55_HCM_TO_ADP_PRC_ALC_INT)",
     "type": "Normal",
@@ -1121,12 +1134,25 @@
     "number": "CHG0039461",
     "short_description": "Grip - Posture Check & AI Agents (Claude, Copilot, ChatGPT, Gemini) Integration",
     "type": "Normal",
-    "state": "Scheduled",
+    "state": "Implement",
     "assignment_group": "Infosec",
     "assigned_to": "Hiti Parikh",
     "planned_start": "2026-03-16",
     "planned_end": "2026-03-16",
     "cmdb_ci": "Cyber Security",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
+    "number": "CHG0039474",
+    "short_description": "PE SB2 to Prod - Contract Linking Inactive Filter, Contract ID on Tasks (PE-133), Onboarding to Preboarding Labels (PE-161), IEC Validation Rule Fix (PE-167)",
+    "type": "Standard",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Paramasivan Arunachalam",
+    "planned_start": "2026-03-17",
+    "planned_end": "2026-03-17",
+    "cmdb_ci": "Salesforce",
     "close_code": "",
     "priority": "4 - Low"
   },
@@ -1140,6 +1166,19 @@
     "planned_start": "2026-03-17",
     "planned_end": "2026-03-17",
     "cmdb_ci": "Salesforce",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
+    "number": "CHG0039493",
+    "short_description": "Update Retirement Statement Data as of 3/16/26",
+    "type": "Standard",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Xiu Lu",
+    "planned_start": "2026-03-17",
+    "planned_end": "2026-03-17",
+    "cmdb_ci": "Portal \u2013 Content Update",
     "close_code": "",
     "priority": "4 - Low"
   },

@@ -346,7 +346,9 @@
       "mcp__obsidian__obsidian_update_note",
       "Bash(\"/c/Users/FallonD/Downloads/Setup.Microsoft.PowerAutomate.exe\" --help 2>&1 | head -30 || \"/c/Users/FallonD/Downloads/Setup.Microsoft.PowerAutomate.exe\" /? 2>&1 | head -30 || echo \"No help output\")",
       "Bash(cd ~/Code/HT-085-change-mgmt && rm ccb_changes_cache.json && /c/Python314/python fetch_ccb_changes.py 2>&1)",
-      "mcp__teams__get_presence"
+      "mcp__teams__get_presence",
+      "Bash(cd:*)",
+      "Bash(node:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
