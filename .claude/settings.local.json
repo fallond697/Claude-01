@@ -352,7 +352,10 @@
       "Bash(PYTHONIOENCODING=utf-8 /c/Python314/python refresh-calendar.py 2>&1)",
       "WebFetch(domain:status.anthropic.com)",
       "WebFetch(domain:status.claude.com)",
-      "Bash(PYTHONIOENCODING=utf-8 /c/Python314/python /c/Users/FallonD/Code/Claude-01/scripts/refresh-calendar.py 2>&1)"
+      "Bash(PYTHONIOENCODING=utf-8 /c/Python314/python /c/Users/FallonD/Code/Claude-01/scripts/refresh-calendar.py 2>&1)",
+      "WebFetch(domain:www.anthropic.com)",
+      "Bash(PYTHONIOENCODING=utf-8 /c/Python314/python /c/Users/FallonD/Code/HT-085-change-mgmt/gen_march_audit.py 2>&1)",
+      "Bash(wc -l /c/Users/FallonD/Code/HT-085-change-mgmt/gen_*.py | sort -n | tail -10)"
     ]
   },
   "enableAllProjectMcpServers": true,
