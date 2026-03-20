@@ -156,7 +156,10 @@
       "Skill(hcore:vibe-builder)",
       "Skill(hmem:l3)",
       "Skill(hmem:para-router)",
-      "Skill(hproj:report-writer)"
+      "Skill(hproj:report-writer)",
+      "mcp__outlook__find_available_times",
+      "mcp__outlook__create_calendar_event",
+      "mcp__outlook__cancel_event"
     ]
   },
   "enableAllProjectMcpServers": true
