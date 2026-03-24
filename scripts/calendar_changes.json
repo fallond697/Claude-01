@@ -1,31 +1,5 @@
 [
   {
-    "number": "CHG0039204",
-    "short_description": "HCM[PROD]:  26A  Upgrade",
-    "type": "Normal",
-    "state": "Closed",
-    "assignment_group": "Enterprise Applications",
-    "assigned_to": "Brian Ouderkirk",
-    "planned_start": "2026-02-21",
-    "planned_end": "2026-02-23",
-    "cmdb_ci": "Oracle - HCM",
-    "close_code": "Successful",
-    "priority": "4 - Low"
-  },
-  {
-    "number": "CHG0039146",
-    "short_description": "Salesforce [PROD] -Spring '26 Release",
-    "type": "Normal",
-    "state": "Closed",
-    "assignment_group": "Enterprise Applications",
-    "assigned_to": "Brian Ouderkirk",
-    "planned_start": "2026-02-21",
-    "planned_end": "2026-02-21",
-    "cmdb_ci": "Salesforce",
-    "close_code": "Successful",
-    "priority": "4 - Low"
-  },
-  {
     "number": "CHG0039386",
     "short_description": "Upgrade trust-manager to v0.21.0",
     "type": "Emergency",
@@ -835,13 +809,13 @@
     "number": "CHG0039449",
     "short_description": "Decommission 4 Medamerica Domain Azure VMs  ",
     "type": "Normal",
-    "state": "Review",
+    "state": "Closed",
     "assignment_group": "Enterprise Systems",
     "assigned_to": "Ganesh Patil",
     "planned_start": "2026-03-12",
     "planned_end": "2026-03-13",
     "cmdb_ci": "Servers",
-    "close_code": "",
+    "close_code": "Successful",
     "priority": "4 - Low"
   },
   {
@@ -1030,13 +1004,13 @@
     "number": "CHG0039494",
     "short_description": "Please refresh sandbox 12",
     "type": "Standard",
-    "state": "Review",
+    "state": "Closed",
     "assignment_group": "Enterprise Applications",
     "assigned_to": "Parvathi Arun",
     "planned_start": "2026-03-17",
     "planned_end": "2026-03-18",
     "cmdb_ci": "Salesforce",
-    "close_code": "",
+    "close_code": "Successful",
     "priority": "4 - Low"
   },
   {
@@ -1160,13 +1134,13 @@
     "number": "CHG0039503",
     "short_description": "Deploy Wiz Kubernetes Connector to 2 Production AKS Clusters",
     "type": "Normal",
-    "state": "Review",
+    "state": "Closed",
     "assignment_group": "Enterprise Systems",
     "assigned_to": "Arun Kaithe",
     "planned_start": "2026-03-20",
     "planned_end": "2026-03-20",
     "cmdb_ci": "Azure-AWS",
-    "close_code": "",
+    "close_code": "Successful",
     "priority": "4 - Low"
   },
   {
@@ -1196,6 +1170,32 @@
     "priority": "4 - Low"
   },
   {
+    "number": "CHG0039496",
+    "short_description": "Add ACL for Customer Experience Survey",
+    "type": "Normal",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Beth Vanderheiden",
+    "planned_start": "2026-03-24",
+    "planned_end": "2026-03-24",
+    "cmdb_ci": "ServiceNow",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
+    "number": "CHG0039540",
+    "short_description": "[4/1/26] QuikCharge Site Startup - [Adventist Health Specialty Bakersfield - CC]",
+    "type": "Standard",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Yang Lee",
+    "planned_start": "2026-03-24",
+    "planned_end": "2026-03-24",
+    "cmdb_ci": "QuikCharge",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
     "number": "CHG0039492",
     "short_description": "Update Title__c Picklist Values - A.R.N.P.",
     "type": "Standard",
@@ -1209,8 +1209,47 @@
     "priority": "4 - Low"
   },
   {
+    "number": "CHG0039541",
+    "short_description": "[4/1/26] QuikCharge Site Startup - [Delano Regional Medical Center - CC]",
+    "type": "Standard",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Yang Lee",
+    "planned_start": "2026-03-24",
+    "planned_end": "2026-03-24",
+    "cmdb_ci": "QuikCharge",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
     "number": "CHG0039488",
     "short_description": "Salesforce Partnership Entity Dropdown Addition",
+    "type": "Standard",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Derrick Chin",
+    "planned_start": "2026-03-24",
+    "planned_end": "2026-03-24",
+    "cmdb_ci": "Salesforce",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
+    "number": "CHG0039539",
+    "short_description": "[4/1/26] QuikCharge Site Startup - [Adventist Health Bakersfield - CC]",
+    "type": "Standard",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Yang Lee",
+    "planned_start": "2026-03-24",
+    "planned_end": "2026-03-24",
+    "cmdb_ci": "QuikCharge",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
+    "number": "CHG0039484",
+    "short_description": "Changing a field label in Salesforce",
     "type": "Standard",
     "state": "Scheduled",
     "assignment_group": "Enterprise Applications",
@@ -1274,15 +1313,28 @@
     "priority": "4 - Low"
   },
   {
-    "number": "CHG0039522",
-    "short_description": "Deploy Wiz Kubernetes Connector to Prod AKS",
+    "number": "CHG0039131",
+    "short_description": "Memo Field Population on Depreciation Journals",
     "type": "Normal",
-    "state": "Assess",
-    "assignment_group": "Enterprise Systems",
-    "assigned_to": "Arun Kaithe",
-    "planned_start": "2026-03-27",
-    "planned_end": "2026-03-27",
-    "cmdb_ci": "Azure-AWS",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Jitin Xavier (Contractor)",
+    "planned_start": "2026-03-26",
+    "planned_end": "2026-03-26",
+    "cmdb_ci": "Netsuite",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
+    "number": "CHG0039435",
+    "short_description": "Deploy Contract Name fix for Fixed Asset records to Production",
+    "type": "Normal",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Jitin Xavier (Contractor)",
+    "planned_start": "2026-03-26",
+    "planned_end": "2026-03-26",
+    "cmdb_ci": "Netsuite",
     "close_code": "",
     "priority": "4 - Low"
   }
