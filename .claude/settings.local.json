@@ -159,7 +159,16 @@
       "Skill(hproj:report-writer)",
       "mcp__outlook__find_available_times",
       "mcp__outlook__create_calendar_event",
-      "mcp__outlook__cancel_event"
+      "mcp__outlook__cancel_event",
+      "Read(//c/Users/FallonD/bin/**)",
+      "Bash(mv ~/bin/bd.exe ~/bin/bd.exe.bak)",
+      "Bash(mv ~/bin/bd.exe.new ~/bin/bd.exe)",
+      "Bash(mv ~/bin/bd.exe.bak ~/bin/bd.exe)",
+      "Read(//tmp/**)",
+      "Bash(mv ~/bin/bd.exe ~/bin/bd.exe.old)",
+      "Bash(cp /tmp/beads_extract/bd.exe ~/bin/bd.exe)",
+      "Bash(cp /tmp/dolt_extract/dolt-windows-amd64/bin/dolt.exe ~/bin/)",
+      "Bash(dolt version:*)"
     ]
   },
   "enableAllProjectMcpServers": true
