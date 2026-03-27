@@ -121,7 +121,7 @@ def main():
 
     # Query last 30 days + upcoming 2 weeks
     today = datetime.now()
-    start_date = today - timedelta(days=30)
+    start_date = today - timedelta(days=42)
     end_date = today + timedelta(days=14)
 
     # State codes: -5=New, -4=Assess, -3=Authorize, -2=Scheduled, -1=Implement,
