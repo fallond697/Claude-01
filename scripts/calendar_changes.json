@@ -1,18 +1,5 @@
 [
   {
-    "number": "CHG0039298",
-    "short_description": "athenaIDX Hosting / Private Cloud Monthly Preventative Maintenance",
-    "type": "Normal",
-    "state": "Closed",
-    "assignment_group": "App Support  - RCM MedFM",
-    "assigned_to": "Jose Ortiz",
-    "planned_start": "2026-02-15",
-    "planned_end": "2026-02-15",
-    "cmdb_ci": "Athena IDX",
-    "close_code": "Successful",
-    "priority": "4 - Low"
-  },
-  {
     "number": "CHG0039238",
     "short_description": "New Application - VIA",
     "type": "Standard",
@@ -1751,6 +1738,19 @@
     "planned_start": "2026-03-31",
     "planned_end": "2026-03-31",
     "cmdb_ci": "Salesforce",
+    "close_code": "",
+    "priority": "4 - Low"
+  },
+  {
+    "number": "CHG0039563",
+    "short_description": "EPBCS- Update Substitution variables as part on Monthly Activity",
+    "type": "Standard",
+    "state": "Scheduled",
+    "assignment_group": "Enterprise Applications",
+    "assigned_to": "Amol Kamble",
+    "planned_start": "2026-03-31",
+    "planned_end": "2026-03-31",
+    "cmdb_ci": "Oracle EPBCS",
     "close_code": "",
     "priority": "4 - Low"
   },
