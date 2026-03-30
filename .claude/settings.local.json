@@ -184,7 +184,15 @@
       "Bash(find /c/Users/FallonD/Code/HT-095-digital-twin -maxdepth 3 -type f \\\\\\(-name *.bicep -o -name *.tf -o -name *.yml -o -name *.yaml -o -name .github -o -name web.config -o -name *.config \\\\\\))",
       "Bash(find /c/Users/FallonD/Code/HT-095-digital-twin -path */node_modules -prune -o -type f \\\\\\(-name *.bicep -o -name *.tf -o -name *.yml -o -name *.yaml -o -name web.config -o -name *.config -o -name *.workflow \\\\\\) -print)",
       "Bash(az --version)",
-      "Bash(az account:*)"
+      "Bash(az account:*)",
+      "Bash(node -e \":*)",
+      "Bash(powershell.exe -NoProfile -Command \"Get-Module -ListAvailable PnP.PowerShell | Select-Object Name,Version\" 2>&1)",
+      "Read(//c/Program Files/Microsoft Power BI Desktop/bin/**)",
+      "Bash(where.exe PBIDesktop.exe)",
+      "Bash(powershell.exe -NoProfile -Command \"Get-AppxPackage *PowerBI* | Select-Object Name,InstallLocation\" 2>&1)",
+      "Bash(powershell.exe -NoProfile -Command \"Start-Process 'shell:AppsFolder\\\\Microsoft.MicrosoftPowerBIDesktop_8wekyb3d8bbwe!Microsoft.MicrosoftPowerBIDesktop'\" 2>&1)",
+      "Bash(powershell.exe -NoProfile -Command \"\\(Get-AppxPackage *PowerBI*\\).PackageFamilyName\" 2>&1)",
+      "Bash(powershell.exe -NoProfile -Command \"explorer.exe 'shell:AppsFolder\\\\Microsoft.MicrosoftPowerBIDesktop_8wekyb3d8bbwe!Microsoft.MicrosoftPowerBIDesktop'\" 2>&1)"
     ]
   },
   "enableAllProjectMcpServers": true
