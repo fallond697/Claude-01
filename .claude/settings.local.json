@@ -168,7 +168,19 @@
       "Bash(mv ~/bin/bd.exe ~/bin/bd.exe.old)",
       "Bash(cp /tmp/beads_extract/bd.exe ~/bin/bd.exe)",
       "Bash(cp /tmp/dolt_extract/dolt-windows-amd64/bin/dolt.exe ~/bin/)",
-      "Bash(dolt version:*)"
+      "Bash(dolt version:*)",
+      "Bash(netstat -ano)",
+      "Skill(hcode:code-review)",
+      "Bash(hmem haute:*)",
+      "Bash(powershell.exe -Command \"powercfg /lastwake\" 2>/dev/null)",
+      "Bash(powershell.exe -Command \"powercfg /availablesleepstates\" 2>/dev/null)",
+      "Bash(powershell.exe -Command \"Get-WinEvent -FilterHashtable @{LogName='System'; Id=42,1,107,187,6008} -MaxEvents 15 2>/dev/null | Format-List TimeCreated,Id,ProviderName,Message\")",
+      "Bash(powershell.exe -Command \"powercfg /requests\" 2>/dev/null)",
+      "Bash(powershell.exe -NoProfile -Command \"Get-WinEvent -FilterHashtable @{LogName='System'; Id=42,1,107,187,6008} -MaxEvents 15 | Format-List TimeCreated,Id,ProviderName,Message\")",
+      "Bash(powershell.exe -NoProfile -Command \"powercfg /requests\")",
+      "Bash(powershell.exe -NoProfile -Command \"powercfg /waketimers\")",
+      "Bash(powershell.exe -NoProfile -Command \"Get-WinEvent -FilterHashtable @{LogName='System'; ProviderName='Microsoft-Windows-Kernel-Power'; Id=42,107,109,506,507} -MaxEvents 10 | Format-List TimeCreated,Id,Message\")",
+      "Bash(powershell.exe -NoProfile -Command \"powercfg /batteryreport /output batteryreport.html /duration 1; Select-String 'Active|Connected Standby|Suspended' batteryreport.html | Select-Object -First 30\")"
     ]
   },
   "enableAllProjectMcpServers": true

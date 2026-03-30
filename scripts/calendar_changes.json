@@ -1,44 +1,5 @@
 [
   {
-    "number": "CHG0039310",
-    "short_description": "JAMF: Deploy Tanium client to Mac devices",
-    "type": "Normal",
-    "state": "Closed",
-    "assignment_group": "Service Delivery Optimization",
-    "assigned_to": "Jason Nguyen",
-    "planned_start": "2026-02-13",
-    "planned_end": "2026-02-13",
-    "cmdb_ci": "JAMF",
-    "close_code": "Successful",
-    "priority": "4 - Low"
-  },
-  {
-    "number": "CHG0039288",
-    "short_description": "Server Decommission",
-    "type": "Normal",
-    "state": "Closed",
-    "assignment_group": "Enterprise Systems",
-    "assigned_to": "Khalil Douglas",
-    "planned_start": "2026-02-13",
-    "planned_end": "2026-02-13",
-    "cmdb_ci": "Servers",
-    "close_code": "Successful",
-    "priority": "4 - Low"
-  },
-  {
-    "number": "CHG0039327",
-    "short_description": "New AP:   MOD-AP03",
-    "type": "Emergency",
-    "state": "Closed",
-    "assignment_group": "Enterprise Networking",
-    "assigned_to": "Daniel Anderson",
-    "planned_start": "2026-02-13",
-    "planned_end": "2026-02-13",
-    "cmdb_ci": "Networking & Connectivity",
-    "close_code": "Successful",
-    "priority": "4 - Low"
-  },
-  {
     "number": "CHG0039298",
     "short_description": "athenaIDX Hosting / Private Cloud Monthly Preventative Maintenance",
     "type": "Normal",
@@ -1563,13 +1524,13 @@
     "number": "CHG0039508",
     "short_description": "Block Remote Dekstop Software  - PM",
     "type": "Normal",
-    "state": "Scheduled",
+    "state": "Closed",
     "assignment_group": "Infosec",
     "assigned_to": "Bill Carter",
     "planned_start": "2026-03-24",
     "planned_end": "2026-03-24",
     "cmdb_ci": "Office 365 - Intune",
-    "close_code": "",
+    "close_code": "Successful",
     "priority": "4 - Low"
   },
   {
@@ -1732,13 +1693,13 @@
     "number": "CHG0039522",
     "short_description": "Deploy Wiz Kubernetes Connector to 1 Production AKS Cluster",
     "type": "Normal",
-    "state": "Scheduled",
+    "state": "Closed",
     "assignment_group": "Enterprise Systems",
     "assigned_to": "Arun Kaithe",
     "planned_start": "2026-03-27",
     "planned_end": "2026-03-27",
     "cmdb_ci": "Azure-AWS",
-    "close_code": "",
+    "close_code": "Successful",
     "priority": "4 - Low"
   },
   {
@@ -1764,7 +1725,7 @@
     "planned_start": "2026-03-30",
     "planned_end": "2026-03-30",
     "cmdb_ci": "Snowflake",
-    "close_code": "",
+    "close_code": "Successful",
     "priority": "4 - Low"
   },
   {
