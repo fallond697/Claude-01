@@ -6,8 +6,8 @@
 # 2. Prompt for ADR creation on architectural decisions
 # 3. Store patterns to Neo4j (L4)
 #
-# This is a prompt injection hook — it outputs instructions
-# that the agent should follow before completing the session.
+# This hook outputs session cleanup instructions for the agent
+# to follow before completing the session.
 
 cat << 'EOF'
 ## Session End — Digital Twin Capture

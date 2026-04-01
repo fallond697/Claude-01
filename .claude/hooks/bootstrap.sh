@@ -35,9 +35,8 @@ DAY_OF_WEEK=$(date '+%A')
 # ============================================================
 if [[ "$MODE" == "ea" ]]; then
 cat << EOF
-MANDATORY BOOTSTRAP — EXECUTE BEFORE RESPONDING TO ANY USER MESSAGE.
-This is a BLOCKING requirement. Do NOT skip these steps even if the user's first message is a question or task.
-Complete all steps below FIRST, then address whatever the user asked.
+Session Context — recommended initialization before responding to any user message.
+Complete these steps first, then address whatever the user asked.
 
 STEP 1: Call mcp__outlook__get_calendar_today() (single tool call, no text output yet).
 If outlook fails: say "Outlook auth issue — check ~/.haute/tokens/" and STOP.
