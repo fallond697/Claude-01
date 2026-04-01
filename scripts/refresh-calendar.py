@@ -203,6 +203,19 @@ def main():
 
     log(f"Processed {len(changes)} changes (after dedup/filter)")
 
+    # Count new changes since last refresh
+    previous_numbers = set()
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, "r", encoding="utf-8") as f:
+                previous = json.load(f)
+            previous_numbers = {c.get("number") for c in previous}
+        except (json.JSONDecodeError, KeyError):
+            pass
+    new_changes = [c for c in changes if c["number"] not in previous_numbers]
+    new_count = len(new_changes)
+    log(f"  {new_count} new changes since last refresh")
+
     # Save cache
     with open(CACHE_FILE, "w", encoding="utf-8") as f:
         json.dump(changes, f, indent=2)
@@ -226,14 +239,14 @@ def main():
     # Post notification to Teams via Graph API
     log("Posting notification to Teams...")
     try:
-        post_teams_notification(len(changes))
+        post_teams_notification(len(changes), new_count)
     except Exception as e:
         log(f"ERROR posting to Teams: {e}")
 
     log("Calendar refresh complete")
 
 
-def post_teams_notification(change_count):
+def post_teams_notification(change_count, new_count):
     """Post a calendar update notification with link to Teams channel via Graph API."""
     import msal as _msal
 
@@ -259,10 +272,10 @@ def post_teams_notification(change_count):
     token = result["access_token"]
 
     date_str = datetime.now().strftime("%B %d, %Y")
+    new_text = f'<strong>{new_count}</strong> new change{"s" if new_count != 1 else ""} added since yesterday' if new_count > 0 else 'No new changes since yesterday'
     html = (
-        f'<h3 style="color:#003366;margin:0">Change Management Calendar Updated</h3>'
         f'<p style="margin:6px 0;font-size:14px">'
-        f'<strong>{change_count}</strong> changes refreshed &mdash; {date_str}</p>'
+        f'Change Management Calendar updated &mdash; {new_text}.</p>'
         f'<p style="margin:4px 0">'
         f'<a href="{SN_DASHBOARD}">Open Calendar in ServiceNow</a>'
         f'</p>'

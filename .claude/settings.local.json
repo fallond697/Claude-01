@@ -192,7 +192,22 @@
       "Bash(powershell.exe -NoProfile -Command \"Get-AppxPackage *PowerBI* | Select-Object Name,InstallLocation\" 2>&1)",
       "Bash(powershell.exe -NoProfile -Command \"Start-Process 'shell:AppsFolder\\\\Microsoft.MicrosoftPowerBIDesktop_8wekyb3d8bbwe!Microsoft.MicrosoftPowerBIDesktop'\" 2>&1)",
       "Bash(powershell.exe -NoProfile -Command \"\\(Get-AppxPackage *PowerBI*\\).PackageFamilyName\" 2>&1)",
-      "Bash(powershell.exe -NoProfile -Command \"explorer.exe 'shell:AppsFolder\\\\Microsoft.MicrosoftPowerBIDesktop_8wekyb3d8bbwe!Microsoft.MicrosoftPowerBIDesktop'\" 2>&1)"
+      "Bash(powershell.exe -NoProfile -Command \"explorer.exe 'shell:AppsFolder\\\\Microsoft.MicrosoftPowerBIDesktop_8wekyb3d8bbwe!Microsoft.MicrosoftPowerBIDesktop'\" 2>&1)",
+      "Bash(powershell.exe -NoProfile -Command \"Get-ScheduledTask -TaskName '*CCB*' 2>/dev/null | Format-Table TaskName,State,TaskPath -AutoSize\" 2>&1)",
+      "Bash(powershell.exe -NoProfile -Command \"Get-ScheduledTask -TaskName '*CCB*' -ErrorAction SilentlyContinue | Format-Table TaskName,State,TaskPath -AutoSize\" 2>&1)",
+      "Bash(powershell.exe -NoProfile -Command \"\\(Get-ScheduledTask -TaskName 'CCB Pre-Meeting Data Sync'\\).Actions | Format-List Execute,Arguments,WorkingDirectory\" 2>&1)",
+      "Read(//c/Users/FallonD/Documents/Change Management/**)",
+      "Bash(powershell.exe -NoProfile -Command \"\\(Get-ScheduledTask -TaskName 'CCB Pre-Meeting Data Sync'\\).Triggers | Format-List DaysOfWeek,StartBoundary,Enabled\" 2>&1)",
+      "Bash('/c/Program Files/Microsoft SDKs/Azure/CLI2/wbin/az' --version)",
+      "Bash(powershell.exe -NoProfile -Command \"az account show --query ''''{subscription:name,id:id,tenant:tenantId}'''' -o json\")",
+      "Bash(powershell.exe -NoProfile -Command \"Get-Command az -ErrorAction SilentlyContinue | Select-Object Source; az --version 2>&1 | Select-Object -First 3\")",
+      "mcp__obsidian__obsidian_list_notes",
+      "mcp__obsidian__obsidian_read_note",
+      "Bash(powershell.exe -NoProfile -Command \"where.exe az 2>&1; Get-ChildItem 'C:\\\\Program Files*\\\\Microsoft*Azure*' -Directory -ErrorAction SilentlyContinue | Select-Object FullName\")",
+      "Bash(mkdir -p /c/Users/FallonD/Code/HT-095-digital-twin/azure-swa/api/changes)",
+      "Bash(mkdir -p /c/Users/FallonD/Code/HT-095-digital-twin/azure-swa/api/calendar)",
+      "Bash(mkdir -p /c/Users/FallonD/Code/HT-095-digital-twin/azure-swa/api/refresh)",
+      "Bash(powershell.exe -NoProfile -Command \"winget install Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements\")"
     ]
   },
   "enableAllProjectMcpServers": true
