@@ -38,6 +38,13 @@ coverage/
 # VS Code extensions
 *.vsix
 
+# Local Claude settings (may contain broad permissions)
+.claude/settings.local.json
+
+# ServiceNow data files (contain employee PII)
+scripts/servicenow_changes.json
+scripts/calendar_changes.json
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db

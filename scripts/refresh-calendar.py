@@ -14,9 +14,32 @@ from pathlib import Path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 INSTANCE_URL = "https://vituity.service-now.com"
 TOKEN_FILE = os.path.join(Path.home(), ".servicenow-mcp", "tokens.json")
-CLIENT_ID = "dc4638c33c104aa6ac3d37249ff8590b"
-CLIENT_SECRET = r"-w`h6Gat0IMuMM5&e@@3}?Q|KFmW71Xo"
 CACHE_FILE = os.path.join(SCRIPT_DIR, "calendar_changes.json")
+
+
+def _load_sn_credentials():
+    """Load ServiceNow OAuth client credentials from env vars or tokens file."""
+    client_id = os.environ.get("SN_CLIENT_ID")
+    client_secret = os.environ.get("SN_CLIENT_SECRET")
+    if client_id and client_secret:
+        return client_id, client_secret
+    # Fallback: read from tokens file
+    try:
+        with open(TOKEN_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        inst = data.get(INSTANCE_URL, {})
+        client_id = inst.get("clientId", "")
+        client_secret = inst.get("clientSecret", "")
+        if client_id and client_secret:
+            return client_id, client_secret
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+    raise RuntimeError(
+        "ServiceNow OAuth credentials not found. "
+        "Set SN_CLIENT_ID and SN_CLIENT_SECRET env vars, "
+        f"or add clientId/clientSecret to {TOKEN_FILE}"
+    )
+
 EXCLUDE_STATES = {"Canceled", "New", "Assess"}
 
 LOG_FILE = os.path.join(SCRIPT_DIR, "refresh-calendar.log")
@@ -47,10 +70,11 @@ def save_tokens(tokens):
 def refresh_token(tokens):
     """Refresh expired access token using refresh_token grant."""
     log("Refreshing access token...")
+    client_id, client_secret = _load_sn_credentials()
     params = urllib.parse.urlencode({
         "grant_type": "refresh_token",
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
+        "client_id": client_id,
+        "client_secret": client_secret,
         "refresh_token": tokens["refreshToken"],
     }).encode("utf-8")
 
@@ -250,11 +274,14 @@ def post_teams_notification(change_count, new_count):
     """Post a calendar update notification with link to Teams channel via Graph API."""
     import msal as _msal
 
-    TENANT_ID = "56b24b68-e3c8-4895-89a0-05a74d0f8c84"
-    MSAL_CLIENT_ID = "ff4acc71-0fd8-459d-afda-0ec31f2e7bab"
-    MSAL_TOKEN_CACHE = os.path.join(Path.home(), ".email_ingest", "vituity_token_cache.json")
-    GROUP_ID = "fb1fa849-3b0d-4d15-a72f-f1b56d60186a"
-    CHANNEL_ID = "19:77c7ce1868b546108d5e77c65eff8a3b@thread.skype"
+    TENANT_ID = os.environ.get("AZURE_TENANT_ID", "56b24b68-e3c8-4895-89a0-05a74d0f8c84")
+    MSAL_CLIENT_ID = os.environ.get("MSAL_CLIENT_ID", "ff4acc71-0fd8-459d-afda-0ec31f2e7bab")
+    MSAL_TOKEN_CACHE = os.environ.get(
+        "MSAL_TOKEN_CACHE",
+        os.path.join(Path.home(), ".email_ingest", "vituity_token_cache.json"),
+    )
+    GROUP_ID = os.environ.get("TEAMS_GROUP_ID", "fb1fa849-3b0d-4d15-a72f-f1b56d60186a")
+    CHANNEL_ID = os.environ.get("TEAMS_CHANNEL_ID", "19:77c7ce1868b546108d5e77c65eff8a3b@thread.skype")
     CALENDAR_URL = "https://vituity.sharepoint.com/sites/PM-ITSEngineering-DEPT/Shared%20Documents/CCB/Change_Management_Calendar.html"
     SN_DASHBOARD = "https://vituity.service-now.com/now/platform-analytics-workspace/dashboards/params/edit/false/sys-id/27df42dbe6770153e1186e1215e19ffb"
 
