@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change Management Digital Twin — Live</title>
+<style>
+  :root {
+    --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a; --text: #e0e0e6;
+    --muted: #8b8fa3; --accent: #c8c3ff; --green: #00b894; --yellow: #fdcb6e;
+    --orange: #e17055; --red: #d63031; --blue: #74b9ff; --cyan: #00cec9;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 24px; }
+
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .header h1 { font-size: 22px; font-weight: 600; }
+  .header h1 span { color: var(--accent); }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .timestamp { color: var(--muted); font-size: 13px; }
+  .live-dot { display: inline-block; width: 8px; height: 8px; background: var(--green); border-radius: 50%; margin-right: 6px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .refresh-btn { background: var(--accent); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
+  .refresh-btn:hover { opacity: 0.85; }
+  .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .countdown { color: var(--muted); font-size: 11px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+  .tab { padding: 10px 24px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab .badge-count { display: inline-block; background: rgba(108,92,231,0.2); color: var(--accent); padding: 1px 8px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+  .tab.active .badge-count { background: var(--accent); color: white; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* KPI Row */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .kpi .value { font-size: 28px; font-weight: 700; }
+  .kpi .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+  /* Panel */
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+  .panel h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 14px; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 12px; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: var(--accent); }
+  th.sortable span { font-size: 10px; opacity: 0.5; }
+  th.sortable span.asc::after { content: ' \25B2'; opacity: 1; }
+  th.sortable span.desc::after { content: ' \25BC'; opacity: 1; }
+  td { padding: 10px 12px; border-bottom: 1px solid #1f2230; vertical-align: top; }
+  tr:hover td { background: rgba(108,92,231,0.05); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge.standard { background: rgba(0,184,148,0.15); color: var(--green); }
+  .badge.normal { background: rgba(9,132,227,0.15); color: var(--blue); }
+  .badge.emergency { background: rgba(214,48,49,0.15); color: var(--red); }
+  .badge.low { background: rgba(0,184,148,0.15); color: var(--green); }
+  .badge.moderate { background: rgba(253,203,110,0.15); color: var(--yellow); }
+  .badge.high { background: rgba(225,112,85,0.15); color: var(--orange); }
+  .badge.stale { background: rgba(214,48,49,0.15); color: var(--red); }
+  .badge.ok { background: rgba(0,184,148,0.15); color: var(--green); }
+  .badge.warn { background: rgba(225,112,85,0.15); color: var(--orange); }
+  .badge.crit { background: rgba(214,48,49,0.15); color: var(--red); }
+  .badge.requested { background: rgba(253,203,110,0.15); color: var(--yellow); }
+  .badge.approved { background: rgba(0,184,148,0.15); color: var(--green); }
+
+  .health-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .health-dot.green { background: var(--green); }
+  .health-dot.yellow { background: var(--yellow); }
+  .health-dot.red { background: var(--red); }
+
+  /* Grid layouts */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+  /* Donut */
+  .donut-container { display: flex; align-items: center; gap: 20px; }
+  .donut { width: 100px; height: 100px; border-radius: 50%; position: relative; flex-shrink: 0; }
+  .donut::after { content: ''; position: absolute; top: 25%; left: 25%; width: 50%; height: 50%; background: var(--card); border-radius: 50%; }
+  .donut-legend { display: flex; flex-direction: column; gap: 6px; }
+  .donut-legend .item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .donut-legend .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Bar chart */
+  .bar-chart { display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { width: 110px; font-size: 12px; text-align: right; color: var(--muted); flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { flex: 1; height: 22px; background: #252836; border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; min-width: 28px; }
+
+  /* Assignee */
+  .assignee-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid #1f2230; }
+  .assignee-row:last-child { border: none; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .assignee-info { flex: 1; }
+  .assignee-name { font-size: 13px; font-weight: 500; }
+  .assignee-group { font-size: 11px; color: var(--muted); }
+  .assignee-count { font-size: 18px; font-weight: 700; color: var(--accent); }
+
+  .error-banner { background: rgba(214,48,49,0.15); border: 1px solid var(--red); color: var(--red); padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .expand-row { cursor: pointer; }
+  .expand-row:hover td { background: rgba(108,92,231,0.08); }
+  .detail-row { display: none; }
+  .detail-row.open { display: table-row; }
+  .detail-row td { padding: 16px 20px; background: #151822; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .detail-section h3 { font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .detail-section p { font-size: 12px; color: var(--text); line-height: 1.6; white-space: pre-wrap; max-height: 300px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>Change Management</span> Digital Twin</h1>
+  <div class="header-right">
+    <span class="countdown" id="countdown"></span>
+    <button class="refresh-btn" id="refreshBtn" onclick="manualRefresh()">Refresh Now</button>
+    <div class="timestamp"><span class="live-dot"></span><span id="lastRefresh">Loading...</span></div>
+  </div>
+</div>
+
+<div id="errorBanner" class="error-banner" style="display:none;"></div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="ccb" onclick="switchTab('ccb')">CCB Review <span class="badge-count" id="ccbCount">0</span></div>
+  <div class="tab" data-tab="review" onclick="switchTab('review')">Overdue Changes <span class="badge-count" id="reviewCount">0</span></div>
+  <div class="tab" data-tab="calendar" onclick="switchTab('calendar'); loadCalendar();">Calendar <span class="badge-count" id="calCount">0</span></div>
+</div>
+
+<!-- ═══ CCB REVIEW TAB ═══ -->
+<div class="tab-content active" id="tab-ccb">
+  <div class="panel">
+    <h2>Changes for CCB — Thursday 4/02/2026 1:00 PM PST</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>CHG#</th><th>Description</th><th class="sortable" onclick="sortTable('ccb','type')">Type <span id="sort-ccb-type"></span></th><th class="sortable" onclick="sortTable('ccb','state')">State <span id="sort-ccb-state"></span></th><th>Risk</th><th>CI</th>
+          <th class="sortable" onclick="sortTable('ccb','assignee')">Assignee <span id="sort-ccb-assignee"></span></th><th class="sortable" onclick="sortTable('ccb','planned_start')">Planned Start <span id="sort-ccb-planned_start"></span></th><th>Planned End</th>
+        </tr>
+      </thead>
+      <tbody id="ccbTable"></tbody>
+    </table>
+  </div>
+  <div class="kpi-row" id="ccbKpis"></div>
+  <div class="grid-3" id="ccbCharts"></div>
+</div>
+
+<!-- ═══ OVERDUE IN REVIEW TAB ═══ -->
+<div class="tab-content" id="tab-review">
+  <div class="panel">
+    <h2>Overdue Changes — Review / Scheduled / Implement (excluding On-Hold)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>CHG#</th><th>Description</th><th class="sortable" onclick="sortTable('review','state')">State <span id="sort-review-state"></span></th><th class="sortable" onclick="sortTable('review','type')">Type <span id="sort-review-type"></span></th><th>Risk</th><th>CI</th>
+          <th class="sortable" onclick="sortTable('review','assignee')">Assignee <span id="sort-review-assignee"></span></th><th>Planned Start</th><th class="sortable" onclick="sortTable('review','planned_end')">Planned End <span id="sort-review-planned_end"></span></th><th>Days Stale</th><th class="sortable" onclick="sortTable('review','last_activity')">Last Activity <span id="sort-review-last_activity"></span></th>
+        </tr>
+      </thead>
+      <tbody id="reviewTable"></tbody>
+    </table>
+  </div>
+  <div class="kpi-row" id="reviewKpis"></div>
+  <div class="grid-3" id="reviewCharts"></div>
+</div>
+
+<!-- ═══ CALENDAR TAB ═══ -->
+<div class="tab-content" id="tab-calendar">
+  <div class="panel">
+    <h2>Change Management Calendar</h2>
+    <div style="display:flex;gap:16px;margin:12px 0;align-items:center;flex-wrap:wrap;">
+      <span class="badge normal" style="padding:4px 12px;">Normal</span>
+      <span class="badge standard" style="padding:4px 12px;">Standard</span>
+      <span class="badge emergency" style="padding:4px 12px;">Emergency</span>
+      <span style="font-size:12px;color:var(--muted);margin-left:12px;" id="calStats"></span>
+      <span style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+        <label style="font-size:12px;color:var(--muted);">Range:</label>
+        <select id="calRange" onchange="switchCalRange()" style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">
+          <option value="1">Last 1 month</option>
+          <option value="2" selected>Last 2 months</option>
+          <option value="3">Last 3 months</option>
+          <option value="6">Last 6 months</option>
+        </select>
+      </span>
+    </div>
+    <div id="calendarGrid" style="color:var(--text);font-size:13px;">Loading calendar data...</div>
+  </div>
+  <div class="kpi-row" id="calKpis"></div>
+</div>
+
+<style>
+  .cal-table { width:100%; border-collapse:collapse; table-layout:fixed; }
+  .cal-table th { background:rgba(200,195,255,0.12); color:var(--accent); padding:8px 4px; font-size:11px; text-align:center; text-transform:uppercase; letter-spacing:0.5px; }
+  .cal-table td { border:1px solid var(--border); vertical-align:top; padding:0; min-height:100px; height:auto; }
+  .cal-table td.weekend { background:rgba(255,255,255,0.02); }
+  .cal-table td.today { border:2px solid var(--orange); background:rgba(225,112,85,0.08); }
+  .cal-table td.empty { background:transparent; }
+  .cal-day-num { font-size:12px; font-weight:700; color:var(--text); padding:4px 6px; }
+  .cal-day-num .day-badge { font-size:10px; font-weight:600; color:var(--yellow); margin-left:4px; }
+  .cal-chg { display:block; margin:1px 2px; padding:2px 5px; border-radius:3px; font-size:10px; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; }
+  .cal-chg:hover { opacity:0.85; filter:brightness(1.2); }
+  .cal-chg-Normal { background:rgba(116,185,255,0.35); color:#b8daff; }
+  .cal-chg-Standard { background:rgba(0,184,148,0.35); color:#7dffdb; }
+  .cal-chg-Emergency { background:rgba(255,68,68,0.4); color:#ff9b9b; font-weight:700; }
+  .cal-month-title { font-size:16px; font-weight:700; color:var(--accent); margin:20px 0 8px; display:flex; justify-content:space-between; align-items:baseline; }
+  .cal-month-title .cal-count { font-size:12px; color:var(--muted); font-weight:400; }
+  .cal-state { font-size:8px; padding:1px 3px; border-radius:2px; margin-left:2px; }
+  .cal-state-Scheduled { background:rgba(253,203,110,0.2); color:var(--yellow); }
+  .cal-state-Implement { background:rgba(0,184,148,0.2); color:var(--green); }
+  .cal-state-Review { background:rgba(116,185,255,0.2); color:var(--blue); }
+  .cal-state-Closed { background:rgba(139,143,163,0.2); color:var(--muted); }
+</style>
+
+<script>
+const POLL_MS = 5 * 60 * 1000;
+let nextPoll = Date.now() + POLL_MS;
+let data = null;
+let calendarLoaded = false;
+
+// ── Tab switching ───────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
+}
+
+// ── Data fetching ───────────────────────────────────────────────────────
+async function fetchData() {
+  try {
+    const res = await fetch('/api/data');
+    data = await res.json();
+    render();
+  } catch (e) {
+    showError('Failed to fetch data: ' + e.message);
+  }
+}
+
+async function manualRefresh() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true; btn.textContent = 'Refreshing...';
+  try {
+    await fetch('/api/refresh');
+    await fetchData();
+    nextPoll = Date.now() + POLL_MS;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Refresh Now';
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBanner');
+  el.style.display = msg ? 'block' : 'none';
+  el.textContent = msg || '';
+}
+
+// ── Sort State ──────────────────────────────────────────────────────────
+const sortState = { ccb: { col: null, dir: 'asc' }, review: { col: null, dir: 'asc' } };
+
+function sortTable(tab, col) {
+  const s = sortState[tab];
+  if (s.col === col) { s.dir = s.dir === 'asc' ? 'desc' : 'asc'; }
+  else { s.col = col; s.dir = 'asc'; }
+  // Update indicators
+  document.querySelectorAll('[id^="sort-' + tab + '-"]').forEach(el => el.className = '');
+  const indicator = document.getElementById('sort-' + tab + '-' + col);
+  if (indicator) indicator.className = s.dir;
+  render();
+}
+
+function applyCcbSort(changes) {
+  const s = sortState.ccb;
+  if (!s.col) return changes;
+  const sorted = [...changes];
+  const dir = s.dir === 'asc' ? 1 : -1;
+  sorted.sort((a, b) => {
+    let va, vb;
+    if (s.col === 'type') { va = a.type || ''; vb = b.type || ''; }
+    else if (s.col === 'state') { va = a.state || ''; vb = b.state || ''; }
+    else if (s.col === 'assignee') { va = a.assigned_to || ''; vb = b.assigned_to || ''; }
+    else if (s.col === 'planned_start') { va = a.planned_start || ''; vb = b.planned_start || ''; }
+    else return 0;
+    return va.localeCompare(vb) * dir;
+  });
+  return sorted;
+}
+
+function applyReviewSort(changes) {
+  const s = sortState.review;
+  if (!s.col) return changes;
+  const sorted = [...changes];
+  const dir = s.dir === 'asc' ? 1 : -1;
+  sorted.sort((a, b) => {
+    let va, vb;
+    if (s.col === 'state') { va = a.state || ''; vb = b.state || ''; }
+    else if (s.col === 'type') { va = a.type || ''; vb = b.type || ''; }
+    else if (s.col === 'assignee') { va = a.assigned_to || ''; vb = b.assigned_to || ''; }
+    else if (s.col === 'planned_end') { va = a.planned_end || ''; vb = b.planned_end || ''; }
+    else if (s.col === 'last_activity') {
+      va = (a.last_activity && a.last_activity.daysSinceUpdate != null) ? a.last_activity.daysSinceUpdate : 9999;
+      vb = (b.last_activity && b.last_activity.daysSinceUpdate != null) ? b.last_activity.daysSinceUpdate : 9999;
+      return (va - vb) * dir;
+    }
+    else return 0;
+    return va.localeCompare(vb) * dir;
+  });
+  return sorted;
+}
+
+// ── Rendering ───────────────────────────────────────────────────────────
+function render() {
+  if (!data) return;
+  if (data.error) showError('ServiceNow error: ' + data.error);
+  else showError(null);
+
+  document.getElementById('lastRefresh').textContent = data.lastRefresh
+    ? new Date(data.lastRefresh).toLocaleString() + ' — Live'
+    : 'Not yet loaded';
+
+  document.getElementById('ccbCount').textContent = data.ccbChanges.length;
+  document.getElementById('reviewCount').textContent = data.reviewChanges.length;
+
+  renderCCB(applyCcbSort(data.ccbChanges));
+  renderReview(applyReviewSort(data.reviewChanges));
+}
+
+function badgeClass(val) {
+  const v = (val || '').toLowerCase();
+  if (v.includes('standard')) return 'standard';
+  if (v.includes('normal')) return 'normal';
+  if (v.includes('emergency')) return 'emergency';
+  if (v.includes('low')) return 'low';
+  if (v.includes('moderate')) return 'moderate';
+  if (v.includes('high')) return 'high';
+  if (v.includes('requested')) return 'requested';
+  if (v.includes('approved')) return 'approved';
+  return '';
+}
+
+function initials(name) {
+  return (name || '?').split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2);
+}
+
+const avatarColors = [
+  'rgba(108,92,231,0.2)', 'rgba(0,206,201,0.2)', 'rgba(9,132,227,0.2)',
+  'rgba(225,112,85,0.2)', 'rgba(253,203,110,0.2)', 'rgba(0,184,148,0.2)'
+];
+const avatarTextColors = ['var(--accent)', 'var(--cyan)', 'var(--blue)', 'var(--orange)', 'var(--yellow)', 'var(--green)'];
+
+function toggleDetail(id) {
+  const row = document.getElementById('detail-' + id);
+  if (row) row.classList.toggle('open');
+}
+
+function truncate(s, n) { return s && s.length > n ? s.substring(0, n) + '...' : (s || ''); }
+
+function formatDate(d) {
+  if (!d) return '—';
+  // Try to extract just MM/DD
+  const m = d.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+  if (m) return m[1] + '/' + m[2];
+  return d.substring(0, 10);
+}
+
+// ── CCB Tab ─────────────────────────────────────────────────────────────
+// ── R&IA Question Parser ────────────────────────────────────────────────
+// Answers can appear in 3 formats:
+//   Format A: Inside brackets replacing the prompt — [No], [Yes], [0 hours]
+//   Format B: After brackets on same line — [Yes/No] Yes, [# hours] 0
+//   Format C: On the next line below the question
+function parseRIA(text) {
+  const lines = (text || '').split(/\r?\n/);
+
+  // For each question, find the line it starts on, then extract the answer
+  // from bracket contents, same line after bracket, or next non-empty line
+  function findAnswer(questionPattern) {
+    for (let i = 0; i < lines.length; i++) {
+      if (!questionPattern.test(lines[i])) continue;
+      const line = lines[i];
+
+      // Check bracket content — is it a real answer or just the template prompt?
+      const bracketMatch = line.match(/\[([^\]]+)\]\s*$/);
+      const bracketAndAfter = line.match(/\[([^\]]+)\]\s*(.+)$/);
+
+      if (bracketAndAfter && bracketAndAfter[2].trim().length > 0) {
+        // Format B: answer after brackets on same line — e.g. "[Yes/No] Yes"
+        const ans = bracketAndAfter[2].trim().toLowerCase();
+        return { answered: true, raw: bracketAndAfter[2].trim(), yes: /^yes/i.test(ans), no: /^no(?!t)/i.test(ans), na: /^n\/a|^na|^not\s*(applicable|possible)/i.test(ans) };
+      }
+
+      if (bracketMatch) {
+        const inside = bracketMatch[1].trim();
+        const insideLower = inside.toLowerCase();
+        // Is it a template prompt or a real answer?
+        const isTemplate = /^(yes\/no|#\s*hours|e\.g\.|pm,\s*rcm,\s*pp|yes\/no\/na|yes\/no\/not)/i.test(inside);
+        if (!isTemplate && inside.length > 0) {
+          // Format A: real answer inside brackets — e.g. "[No]", "[0 hours]", "[ALL]"
+          return { answered: true, raw: inside, yes: /^yes/i.test(insideLower), no: /^no(?!t)/i.test(insideLower), na: /^n\/a|^na$|^not\s*(applicable|possible)/i.test(insideLower) };
+        }
+      }
+
+      // Format C: check next non-empty line(s) for the answer
+      for (let j = i + 1; j < lines.length && j <= i + 3; j++) {
+        const nextLine = lines[j].trim();
+        if (nextLine.length === 0) continue;
+        // Stop if we hit another question
+        if (/^(does |can |if |what |has |will |are |for )/i.test(nextLine)) break;
+        if (nextLine.length > 0) {
+          const ans = nextLine.toLowerCase();
+          return { answered: true, raw: nextLine, yes: /^yes/i.test(ans), no: /^no(?!t)/i.test(ans), na: /^n\/a|^na$|^not\s*(applicable|possible)/i.test(ans) };
+        }
+      }
+
+      return { answered: false, raw: '', yes: false, no: false, na: false };
+    }
+    // Question not found in text at all
+    return { answered: false, raw: '', yes: false, no: false, na: false };
+  }
+
+  const result = {
+    businessCritical: findAnswer(/business-critical/i),
+    phi:              findAnswer(/PHI\/PII|Restricted Data/i),
+    sar:              findAnswer(/Security Architecture Review|\bSAR\b/i),
+    outage:           findAnswer(/outage duration/i),
+    priorNotes:       findAnswer(/documented prior notes/i),
+    qaTest:           findAnswer(/tested in QA/i),
+    ha:               findAnswer(/High Availability|Failover/i),
+    vendorAgreement:  findAnswer(/vendor support agreement/i),
+    vendorDuring:     findAnswer(/vendor support be available during/i),
+    sites:            findAnswer(/sites or business units/i),
+    versions:         findAnswer(/version numbers.*firmware/i)
+  };
+
+  // Check if versions still have template example text
+  if (result.versions.answered) {
+    const v = result.versions.raw.toLowerCase();
+    result.versions.template = v.includes('e.g.') || v === 'major.minor.hotfix -> major.minor.hotfix';
+  }
+
+  return result;
+}
+
+// ── Plan Analysis Engine ────────────────────────────────────────────────
+function analyzePlans(c) {
+  const findings = [];
+  const impl = (c.implementation_plan || '').toLowerCase();
+  const test = (c.test_plan || '').toLowerCase();
+  const back = (c.backout_plan || '').toLowerCase();
+  const ria = (c.risk_impact_analysis || '').toLowerCase();
+
+  // Check if plan references an attachment
+  var implRefsAttachment = /see attached|see the attached|refer to attached|attached document|attached file/i.test(c.implementation_plan || '');
+  var hasAttachments = (c.attachment_count || 0) > 0;
+
+  // Implementation Plan checks
+  if (!c.implementation_plan || c.implementation_plan.length < 30) {
+    if (implRefsAttachment && hasAttachments) {
+      // "See attached" with confirmed attachment is OK
+    } else if (implRefsAttachment && !hasAttachments) {
+      findings.push({ sev: 'crit', msg: 'Implementation plan says "see attached" but no attachment found' });
+    } else {
+      findings.push({ sev: 'crit', msg: 'Implementation plan missing or insufficient' });
+    }
+  } else {
+    // Strip out template prompt lines to isolate actual content
+    const implLines = (c.implementation_plan || '').split(/\r?\n/).filter(l => {
+      const lt = l.trim().toLowerCase();
+      return lt.length > 0
+        && !lt.startsWith('list the steps')
+        && !lt.startsWith('note who will perform')
+        && !lt.startsWith('describe the steps');
+    });
+    const implContent = implLines.join(' ').trim();
+
+    if (implContent.length < 20 && !(implRefsAttachment && hasAttachments))
+      findings.push({ sev: 'crit', msg: 'Implementation plan — only template text, no actual steps provided' });
+    else if (implLines.length < 2 && implContent.length < 80 && !(implRefsAttachment && hasAttachments))
+      findings.push({ sev: 'warn', msg: 'Implementation plan — very brief, may need more detail for CCB' });
+
+    if (impl.match(/(?:^|\s)tbd(?:\s|$)|to be determined|^pending$|pending (?:approval|review|completion|update)|placeholder/im))
+      findings.push({ sev: 'crit', msg: 'Implementation plan — contains TBD/placeholder text' });
+
+    // Check if plan has actionable steps vs just a description
+    // Steps indicators: numbered items, action verbs at start of lines, "login", "deploy", "run", "execute", "navigate"
+    var actionVerbs = ['login','log in','deploy','run ','execute','navigate','click','open ','go to','activate','deactivate','install','configure','connect','upload','download','create','update','set ','apply','verify','confirm','check ','test ','validate','reboot','restart','disable','enable','remove','add ','patch','upgrade','migrate','promote','push','pull','import','export','schedule','initiate','submit','approve','spanning-tree','no spanning','ip route','interface ','vlan','shutdown','no shut','take snapshot','snapshot'];
+    var implLinesLower = implContent.toLowerCase();
+    var hasNumberedSteps = (/[0-9]+[.)-]/).test(implContent) || (/steps*[0-9]/i).test(implContent);
+    var hasActionVerbs = actionVerbs.some(function(v) { return implLinesLower.indexOf(v) >= 0; });
+    var hasVendorAction = (/vendor.{0,30}(will|execute|perform|deploy|install)/i).test(implContent);
+    var hasActionableSteps = hasNumberedSteps || hasActionVerbs || hasVendorAction;
+    var isDescriptionOnly = !hasActionableSteps && implContent.length > 50;
+    if (isDescriptionOnly && !(implRefsAttachment && hasAttachments) && !hasAttachments)
+      findings.push({ sev: 'warn', msg: 'Implementation plan reads as a description — no deployment steps or instructions found' });
+    else if (isDescriptionOnly && hasAttachments)
+      {} // Description with attachments is OK — steps likely in attached doc
+  }
+
+  // Test Plan checks
+  if (!c.test_plan || c.test_plan.length < 30)
+    findings.push({ sev: 'crit', msg: 'Test plan missing or insufficient' });
+  if (test.match(/\b(testing|tests?)\b.{0,30}\bpending\b/) || test.match(/\bpending\b.{0,30}\b(testing|tests?)\b/) || test.match(/^\s*pending\s*$/m))
+    findings.push({ sev: 'crit', msg: 'Test results marked as "Pending" — not yet executed' });
+  if (c.test_plan && !test.includes('explain what testing'))
+    findings.push({ sev: 'warn', msg: 'Test plan — template prompt removed ("Explain what testing...")' });
+  if (c.test_plan && !test.includes('describe the tests'))
+    findings.push({ sev: 'warn', msg: 'Test plan — template prompt removed ("Describe the tests...")' });
+
+  // Backout Plan checks
+  if (!c.backout_plan || c.backout_plan.length < 30)
+    findings.push({ sev: 'crit', msg: 'Backout plan missing or insufficient' });
+  if (c.backout_plan && !back.includes('describe the steps'))
+    findings.push({ sev: 'warn', msg: 'Backout plan — template prompt removed ("Describe the steps...")' });
+  if (back.includes('not possible') || back.includes('cannot be reverted') || back.includes('irreversible'))
+    findings.push({ sev: 'warn', msg: 'Backout may not be possible — flag for CCB discussion' });
+
+  // ── Risk & Impact Analysis — thorough question-by-question check ──
+  if (!c.risk_impact_analysis || c.risk_impact_analysis.length < 30) {
+    findings.push({ sev: 'crit', msg: 'Risk & Impact Analysis missing or insufficient' });
+    return findings;
+  }
+
+  const riaAnswers = parseRIA(c.risk_impact_analysis);
+
+  // 1. Business-critical
+  if (!riaAnswers.businessCritical.answered)
+    findings.push({ sev: 'crit', msg: 'R&IA: Business-critical question not answered' });
+  // Business-critical = Yes with Low risk is acceptable
+
+  // 2. PHI/PII — only flag if unanswered (PHI=Yes is reviewed during CCB)
+  if (!riaAnswers.phi.answered)
+    findings.push({ sev: 'crit', msg: 'R&IA: PHI/PII question not answered' });
+
+  // 3. SAR (Normal/Emergency only — NOT Standard per template)
+  if ((c.type || '').toLowerCase() !== 'standard') {
+    if (!riaAnswers.sar.answered)
+      findings.push({ sev: 'crit', msg: 'R&IA: SAR question not answered' });
+    else if (riaAnswers.sar.no && riaAnswers.sar.raw.trim().length < 10)
+      findings.push({ sev: 'warn', msg: 'R&IA: SAR = No — no justification provided for skipping security review' });
+  }
+
+  // 4. Outage duration
+  if (!riaAnswers.outage.answered)
+    findings.push({ sev: 'warn', msg: 'R&IA: Outage duration not specified' });
+
+  // 5. Documented prior notes
+  if (!riaAnswers.priorNotes.answered)
+    findings.push({ sev: 'warn', msg: 'R&IA: Documented prior notes question not answered' });
+
+  // 6. Tested in QA
+  if (!riaAnswers.qaTest.answered)
+    findings.push({ sev: 'crit', msg: 'R&IA: QA testing question not answered' });
+  else if (riaAnswers.qaTest.no)
+    findings.push({ sev: 'warn', msg: 'R&IA: Not tested in QA — verify justification' });
+
+  // 7. HA / Failover
+  if (!riaAnswers.ha.answered)
+    findings.push({ sev: 'warn', msg: 'R&IA: High Availability / Failover question not answered' });
+
+  // 8. Vendor support agreement
+  if (!riaAnswers.vendorAgreement.answered)
+    findings.push({ sev: 'warn', msg: 'R&IA: Vendor support agreement question not answered' });
+
+  // 9. Vendor support during change
+  if (!riaAnswers.vendorDuring.answered)
+    findings.push({ sev: 'warn', msg: 'R&IA: Vendor availability during change not answered' });
+
+  // 10. Sites / business units — answer inside brackets like [PM, RCM] is valid
+  if (!riaAnswers.sites.answered)
+    findings.push({ sev: 'warn', msg: 'R&IA: Sites/business units impacted not specified or left as template default' });
+
+  // 11. Version numbers — only flag if a version/release is mentioned elsewhere in the CR
+  const crText = ((c.short_description || '') + ' ' + (c.description || '') + ' ' + (c.implementation_plan || '')).toLowerCase();
+  const mentionsVersion = /(upgrade|version|vd|release|d+.d+.d+|d+.d+)/i.test(crText);
+  if (mentionsVersion && !riaAnswers.versions.answered)
+    findings.push({ sev: 'warn', msg: 'R&IA: Version/release mentioned in CR but version numbers not provided in R&IA' });
+  else if (riaAnswers.versions.answered && riaAnswers.versions.template)
+    findings.push({ sev: 'warn', msg: 'R&IA: Version numbers still contain template example text' });
+
+  return findings;
+}
+
+// ── CCB Question & Impact Generator ─────────────────────────────────────
+function generateCcbQuestions(c) {
+  const questions = [];
+  const crText = ((c.short_description || '') + ' ' + (c.description || '') + ' ' + (c.implementation_plan || '') + ' ' + (c.justification || '')).toLowerCase();
+  const ria = c.risk_impact_analysis || '';
+  const riaAnswers = parseRIA(ria);
+
+  // PHI/PII
+  if (riaAnswers.phi.yes) questions.push('PHI/PII data is involved — what safeguards are in place during the change window?');
+
+  // Business-critical = Yes
+  if (riaAnswers.businessCritical.yes) questions.push('This involves a business-critical system — what is the communication plan if the change causes an outage?');
+
+  // No vendor support during change
+  if (riaAnswers.vendorDuring.no) questions.push('Vendor support is not available during the change — who is the escalation contact if issues arise?');
+
+  // No HA/failover
+  if (riaAnswers.ha.no) questions.push('No HA/failover — what is the expected downtime and how will users be notified?');
+
+  // Backout window concern
+  const back = (c.backout_plan || '').toLowerCase();
+  if (back.includes('no') && back.includes('time to backout')) questions.push('Backout window may be tight — can the change be extended if rollback is needed?');
+
+  // Test plan — not tested or pending
+  if (riaAnswers.qaTest.no) questions.push('QA testing was not performed — what gives the team confidence this will succeed?');
+
+  // Version upgrade
+  if (/upgrade|version|d+.d+/.test(crText)) questions.push('Is there a rollback path if the new version introduces regressions?');
+
+  // Large scope / all sites
+  if (riaAnswers.sites.raw && /all/i.test(riaAnswers.sites.raw)) questions.push('All sites/business units impacted — is this being rolled out in phases or all at once?');
+
+  // SAR = No
+  if (riaAnswers.sar.no) questions.push('SAR was not completed — confirm this change does not expand attack surface or introduce new data flows.');
+
+  // Production / go-live
+  if (/production|prod|go.?live/i.test(crText)) questions.push('This is a production deployment — is there a monitoring plan for the first 24-48 hours post-change?');
+
+  // Off-hours / weekend
+  const start = c.planned_start || '';
+  if (start) {
+    const dt = new Date(start);
+    const hour = dt.getHours();
+    if (hour < 6 || hour > 20) questions.push('Change is scheduled outside business hours — who will be on-call during and after the change?');
+  }
+
+  if (questions.length === 0) questions.push('No specific concerns identified — standard approval criteria met.');
+  return questions;
+}
+
+function generateImpacts(c) {
+  const upstream = [];
+  const downstream = [];
+  const crText = ((c.short_description || '') + ' ' + (c.description || '') + ' ' + (c.implementation_plan || '')).toLowerCase();
+  const ci = (c.ci || '').toLowerCase();
+
+  // Include all Impacted Services/CIs from the task_ci tab
+  const impactedCIs = c.impacted_cis || [];
+  const allCIText = [ci, ...impactedCIs.map(x => x.toLowerCase())].join(' ');
+
+  // Active Directory
+  if (allCIText.includes('active directory') || crText.includes('active directory') || crText.includes('gpo') || crText.includes('group policy')) {
+    upstream.push('Active Directory / Group Policy infrastructure');
+    downstream.push('All domain-joined endpoints and users');
+    downstream.push('Authentication services (SSO, MFA)');
+  }
+
+  // Salesforce
+  if (allCIText.includes('salesforce') || crText.includes('salesforce') || crText.includes('sfdc')) {
+    upstream.push('Salesforce platform (APIs, connected apps)');
+    downstream.push('PM, RCM, and Recruiting business workflows');
+    downstream.push('Integrations dependent on Salesforce data');
+  }
+
+  // NetSuite
+  if (allCIText.includes('netsuite') || crText.includes('netsuite')) {
+    upstream.push('Oracle NetSuite ERP platform');
+    downstream.push('Accounting, AP, AR, Payroll processes');
+    downstream.push('Fixed asset and depreciation reporting');
+  }
+
+  // Azure / Cloud
+  if (allCIText.includes('azure') || crText.includes('azure') || crText.includes('aks') || crText.includes('kubernetes')) {
+    upstream.push('Azure cloud infrastructure (AKS, VMs)');
+    downstream.push('Applications hosted on affected clusters');
+    downstream.push('Security monitoring (Wiz, Defender)');
+  }
+
+  // VPN / Network
+  if (crText.includes('vpn') || crText.includes('firewall') || crText.includes('palo alto') || allCIText.includes('network')) {
+    upstream.push('Network infrastructure (firewalls, VPN)');
+    downstream.push('Remote connectivity for users and vendors');
+    downstream.push('Site-to-site integrations');
+  }
+
+  // Intune / Endpoint
+  if (allCIText.includes('intune') || crText.includes('intune') || crText.includes('app locker')) {
+    upstream.push('Microsoft Intune MDM platform');
+    downstream.push('Managed endpoints (desktops, laptops)');
+    downstream.push('End user application access');
+  }
+
+  // Oracle HCM
+  if (allCIText.includes('oracle hcm') || crText.includes('oracle hcm') || allCIText.includes('hcm') || crText.includes('hcm')) {
+    upstream.push('Oracle HCM Cloud');
+    downstream.push('HR data feeds (payroll, benefits, onboarding)');
+  }
+
+  // Power Automate / SharePoint
+  if (crText.includes('power automate') || allCIText.includes('sharepoint') || crText.includes('sharepoint')) {
+    upstream.push('Microsoft Power Platform / SharePoint');
+    downstream.push('Automated workflows and notifications');
+  }
+
+  // ServiceNow
+  if (allCIText.includes('servicenow') || crText.includes('servicenow')) {
+    upstream.push('ServiceNow ITSM platform');
+    downstream.push('Ticket workflows, change management, CMDB');
+  }
+
+  // Infosec / Security tools
+  if (crText.includes('spycloud') || crText.includes('zscaler') || crText.includes('wiz') || crText.includes('sentinel') || allCIText.includes('spycloud') || allCIText.includes('zscaler')) {
+    upstream.push('Security tooling and threat detection');
+    downstream.push('SOC monitoring and alerting');
+  }
+
+  // Snowflake / Data
+  if (allCIText.includes('snowflake') || crText.includes('snowflake')) {
+    upstream.push('Snowflake data warehouse');
+    downstream.push('Analytics, reporting, Tableau dashboards');
+  }
+
+  // Tableau
+  if (allCIText.includes('tableau') || crText.includes('tableau')) {
+    upstream.push('Tableau reporting platform');
+    downstream.push('Business intelligence dashboards and data extracts');
+  }
+
+  // PRTG / Monitoring
+  if (allCIText.includes('prtg') || crText.includes('prtg') || crText.includes('monitoring')) {
+    upstream.push('PRTG monitoring infrastructure');
+    downstream.push('Infrastructure alerting and SOC visibility');
+  }
+
+  // Servers (generic)
+  if (allCIText.includes('servers') && upstream.length === 0) {
+    upstream.push('Server infrastructure');
+    downstream.push('Hosted applications and services');
+  }
+
+  // Add specific impacted devices/services to upstream if not already covered
+  if (impactedCIs.length > 0) {
+    var deviceList = impactedCIs.filter(function(d) {
+      var dl = d.toLowerCase();
+      // Skip if already represented in upstream entries
+      return !upstream.some(function(u) { return u.toLowerCase().includes(dl); });
+    });
+    if (deviceList.length > 0) {
+      upstream.push('Impacted devices: ' + deviceList.join(', '));
+    }
+    // Add downstream impact for each impacted device class
+    var hasSwitch = impactedCIs.some(function(d) { return /sw-|switch/i.test(d); });
+    var hasAP = impactedCIs.some(function(d) { return /ap-|apd|wap/i.test(d); });
+    var hasServer = impactedCIs.some(function(d) { return /srv|server/i.test(d); });
+    if (hasSwitch && !downstream.some(function(d) { return /switch|network core/i.test(d); })) {
+      downstream.push('Network switching fabric — connected endpoints and VLANs');
+    }
+    if (hasAP && !downstream.some(function(d) { return /wifi|wireless/i.test(d); })) {
+      downstream.push('WiFi connectivity for office users and devices');
+    }
+    if (hasServer && !downstream.some(function(d) { return /hosted/i.test(d); })) {
+      downstream.push('Services hosted on impacted servers');
+    }
+  }
+
+  // Generic fallback
+  if (upstream.length === 0) {
+    var primaryCI = c.ci || 'Configuration item not specified';
+    upstream.push(primaryCI);
+  }
+  if (downstream.length === 0) downstream.push('Assess based on CI and assignment group scope');
+
+  return { upstream, downstream, impactedCIs };
+}
+
+function renderCCB(changes) {
+  // KPIs
+  const total = changes.length;
+  const byType = {};
+  const byRisk = {};
+  const byGroup = {};
+  changes.forEach(c => {
+    const t = c.type || 'Unknown'; byType[t] = (byType[t] || 0) + 1;
+    const r = c.risk || 'Unknown'; byRisk[r] = (byRisk[r] || 0) + 1;
+    const g = c.assignment_group || 'Unknown'; byGroup[g] = (byGroup[g] || 0) + 1;
+  });
+  const approved = changes.filter(c => (c.approval || '').toLowerCase().includes('approved')).length;
+  const requested = changes.filter(c => (c.approval || '').toLowerCase().includes('requested')).length;
+
+  document.getElementById('ccbKpis').innerHTML =
+    kpi(total, 'For CCB', 'var(--accent)') +
+    kpi(approved, 'Approved', 'var(--green)') +
+    kpi(requested, 'Pending Approval', 'var(--yellow)') +
+    Object.entries(byRisk).map(([k,v]) => kpi(v, k + ' Risk', riskColor(k))).join('');
+
+  // Charts: By Application, By Group, Approval Status
+  const ciCounts = {};
+  changes.forEach(c => { const ci = c.ci || 'Unknown'; ciCounts[ci] = (ciCounts[ci] || 0) + 1; });
+  const colors = ['var(--accent)', 'var(--blue)', 'var(--cyan)', 'var(--green)', 'var(--orange)', 'var(--yellow)'];
+
+  let ciDeg = 0;
+  const ciGrad = Object.entries(ciCounts).map(([k,v], i) => {
+    const start = ciDeg;
+    ciDeg += (v / total) * 360;
+    return colors[i % colors.length] + ' ' + start + 'deg ' + ciDeg + 'deg';
+  }).join(', ');
+
+  const ciLegend = Object.entries(ciCounts).map(([k,v], i) =>
+    '<div class="item"><div class="dot" style="background:' + colors[i % colors.length] + '"></div>' + k + ' — ' + v + '</div>'
+  ).join('');
+
+  // Assignee panel
+  const assignees = {};
+  changes.forEach(c => {
+    const a = c.assigned_to || 'Unassigned';
+    if (!assignees[a]) assignees[a] = { name: a, group: c.assignment_group, count: 0 };
+    assignees[a].count++;
+  });
+
+  const assigneeHTML = Object.values(assignees).sort((a,b) => b.count - a.count).map((a, i) =>
+    '<div class="assignee-row">' +
+    '<div class="avatar" style="background:' + avatarColors[i % 6] + ';color:' + avatarTextColors[i % 6] + '">' + initials(a.name) + '</div>' +
+    '<div class="assignee-info"><div class="assignee-name">' + a.name + '</div><div class="assignee-group">' + (a.group || '') + '</div></div>' +
+    '<div class="assignee-count">' + a.count + '</div></div>'
+  ).join('');
+
+  document.getElementById('ccbCharts').innerHTML =
+    '<div class="panel"><h2>By Application</h2><div class="donut-container">' +
+    '<div class="donut" style="background:conic-gradient(' + ciGrad + ')"></div>' +
+    '<div class="donut-legend">' + ciLegend + '</div></div></div>' +
+    '<div class="panel"><h2>Assignee Workload</h2>' + assigneeHTML + '</div>' +
+    '<div class="panel"><h2>Approval Status</h2><div style="text-align:center;padding:20px 0;">' +
+    '<div style="font-size:48px;font-weight:700;color:var(--accent)">' + total + '</div>' +
+    '<div style="font-size:12px;color:var(--muted);margin-top:4px;">Total for CCB this Thursday</div>' +
+    '<div style="display:flex;justify-content:center;gap:24px;margin-top:16px;">' +
+    '<div><span style="font-size:20px;font-weight:700;color:var(--green)">' + approved + '</span><div style="font-size:11px;color:var(--muted)">Approved</div></div>' +
+    '<div><span style="font-size:20px;font-weight:700;color:var(--yellow)">' + requested + '</span><div style="font-size:11px;color:var(--muted)">Requested</div></div>' +
+    '</div></div></div>';
+
+  // Table with plan review
+  let rows = '';
+  changes.forEach(c => {
+    const findings = analyzePlans(c);
+    const healthClass = findings.length === 0 ? 'green' : findings.some(f => f.sev === 'crit') ? 'red' : 'yellow';
+    const healthLabel = findings.length === 0 ? 'Clean' : findings.some(f => f.sev === 'crit') ? 'Issues' : 'Minor';
+
+    rows += '<tr class="expand-row" onclick="toggleDetail(\'' + c.number + '\')">' +
+      '<td><a href="https://vituity.service-now.com/change_request.do?sys_id=' + c.sys_id + '" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;">' + c.number + '</a></td>' +
+      '<td>' + truncate(c.short_description, 50) + '</td>' +
+      '<td><span class="badge ' + badgeClass(c.type) + '">' + (c.type || '') + '</span></td>' +
+      '<td><span class="badge ' + (c.state === 'Assess' ? 'requested' : c.state === 'Scheduled' ? 'standard' : 'normal') + '">' + (c.state || '') + '</span></td>' +
+      '<td><span class="badge ' + badgeClass(c.risk) + '">' + (c.risk || '') + '</span></td>' +
+      '<td>' + (c.ci || '') + '</td>' +
+      '<td>' + (c.assigned_to || '') + '</td>' +
+      '<td>' + formatDate(c.planned_start) + '</td>' +
+      '<td>' + formatDate(c.planned_end) + '</td>' +
+      '</tr>';
+
+    // Expandable detail: 4-section plan review + findings
+    rows += '<tr class="detail-row" id="detail-' + c.number + '"><td colspan="9">' +
+
+      // Findings banner
+      (findings.length > 0
+        ? '<div style="background:rgba(225,112,85,0.08);border:1px solid rgba(225,112,85,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;">' +
+          '<div style="font-size:12px;font-weight:600;color:var(--orange);margin-bottom:8px;">REVIEW FINDINGS (' + findings.length + ')</div>' +
+          findings.map(f => '<div style="font-size:12px;color:var(--text);margin-bottom:4px;"><span class="badge ' + f.sev + '" style="margin-right:6px;">' + f.sev.toUpperCase() + '</span>' + esc(f.msg) + '</div>').join('') +
+          '</div>'
+        : '<div style="background:rgba(0,184,148,0.08);border:1px solid rgba(0,184,148,0.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;">' +
+          '<div style="font-size:12px;font-weight:600;color:var(--green);">NO FINDINGS — Plans look complete</div></div>'
+      ) +
+
+      '<div class="detail-grid" style="grid-template-columns:1fr 1fr;">' +
+      '<div class="detail-section"><h3>Implementation Plan</h3><p>' + esc(c.implementation_plan || 'Not provided') + '</p></div>' +
+      '<div class="detail-section"><h3>Risk &amp; Impact Analysis</h3><p>' + esc(c.risk_impact_analysis || 'Not provided') + '</p></div>' +
+      '<div class="detail-section"><h3>Backout Plan</h3><p>' + esc(c.backout_plan || 'Not provided') + '</p></div>' +
+      '<div class="detail-section"><h3>Test Plan</h3><p>' + esc(c.test_plan || 'Not provided') + '</p></div>' +
+      '</div>' +
+
+      // CCB Questions & Impacts — below plans
+      (function() {
+        const questions = generateCcbQuestions(c);
+        const impacts = generateImpacts(c);
+        return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">' +
+          '<div style="background:rgba(200,195,255,0.06);border:1px solid rgba(200,195,255,0.2);border-radius:8px;padding:14px 16px;">' +
+          '<div style="font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Potential CCB Questions (' + questions.length + ')</div>' +
+          questions.map(function(q) { return '<div style="font-size:12px;color:var(--text);margin-bottom:6px;padding-left:12px;border-left:2px solid var(--accent);">' + esc(q) + '</div>'; }).join('') +
+          '</div>' +
+          '<div style="display:flex;flex-direction:column;gap:8px;">' +
+          (impacts.impactedCIs && impacts.impactedCIs.length > 0 ?
+            '<div style="background:rgba(253,203,110,0.06);border:1px solid rgba(253,203,110,0.2);border-radius:8px;padding:14px 16px;margin-bottom:8px;">' +
+            '<div style="font-size:12px;font-weight:600;color:var(--yellow);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Impacted Services / CIs (' + impacts.impactedCIs.length + ')</div>' +
+            impacts.impactedCIs.map(function(ci) { return '<div style="font-size:12px;color:var(--text);margin-bottom:4px;">&#9679; ' + esc(ci) + '</div>'; }).join('') +
+            '</div>' : '') +
+          '<div style="background:rgba(116,185,255,0.06);border:1px solid rgba(116,185,255,0.2);border-radius:8px;padding:14px 16px;margin-bottom:8px;">' +
+          '<div style="font-size:12px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Upstream Dependencies</div>' +
+          impacts.upstream.map(function(u) { return '<div style="font-size:12px;color:var(--text);margin-bottom:4px;">&#8593; ' + esc(u) + '</div>'; }).join('') +
+          '</div>' +
+          '<div style="background:rgba(0,206,201,0.06);border:1px solid rgba(0,206,201,0.2);border-radius:8px;padding:14px 16px;">' +
+          '<div style="font-size:12px;font-weight:600;color:var(--cyan);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Downstream Impacts</div>' +
+          impacts.downstream.map(function(d) { return '<div style="font-size:12px;color:var(--text);margin-bottom:4px;">&#8595; ' + esc(d) + '</div>'; }).join('') +
+          '</div>' +
+          '</div></div>';
+      })() +
+
+      '</td></tr>';
+  });
+  document.getElementById('ccbTable').innerHTML = rows || '<tr><td colspan="9" class="empty-state">No changes with CAB date this Thursday</td></tr>';
+}
+
+// ── Review Tab ──────────────────────────────────────────────────────────
+function renderReview(changes) {
+  const total = changes.length;
+  const pastWindow = changes.filter(c => c.days_past > 0).length;
+  const maxStale = changes.reduce((m, c) => Math.max(m, c.days_past), 0);
+  const byState = {};
+  changes.forEach(c => { const s = c.state || 'Unknown'; byState[s] = (byState[s] || 0) + 1; });
+  const stateColors = { 'Review': 'var(--blue)', 'Scheduled': 'var(--cyan)', 'Implement': 'var(--accent)' };
+
+  const noNotes = changes.filter(c => !c.last_activity || c.last_activity.count === 0).length;
+  const staleNotes = changes.filter(c => c.last_activity && c.last_activity.daysSinceUpdate > 7).length;
+
+  document.getElementById('reviewKpis').innerHTML =
+    kpi(total, 'Total Overdue', 'var(--blue)') +
+    Object.entries(byState).map(([k,v]) => kpi(v, k, stateColors[k] || 'var(--muted)')).join('') +
+    kpi(pastWindow, 'Past Window', 'var(--red)') +
+    kpi(maxStale + 'd', 'Most Stale', 'var(--orange)') +
+    kpi(noNotes, 'No Notes', 'var(--red)') +
+    (staleNotes > 0 ? kpi(staleNotes, 'Notes > 7d Old', 'var(--orange)') : '');
+
+  // Staleness bar chart
+  const sorted = [...changes].sort((a, b) => b.days_past - a.days_past);
+  const maxDays = Math.max(1, sorted[0]?.days_past || 1);
+  const barHTML = sorted.map(c => {
+    const pct = Math.max(5, (c.days_past / maxDays) * 100);
+    const color = c.days_past > 7 ? 'linear-gradient(90deg, var(--orange), var(--red))' : c.days_past > 3 ? 'var(--orange)' : 'var(--yellow)';
+    return '<div class="bar-row"><div class="bar-label">' + c.number + '</div>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + color + '">' + c.days_past + 'd</div></div></div>';
+  }).join('');
+
+  // Assignees
+  const assignees = {};
+  changes.forEach(c => {
+    const a = c.assigned_to || 'Unassigned';
+    if (!assignees[a]) assignees[a] = { name: a, group: c.assignment_group, count: 0 };
+    assignees[a].count++;
+  });
+  const assigneeHTML = Object.values(assignees).sort((a,b) => b.count - a.count).map((a, i) =>
+    '<div class="assignee-row">' +
+    '<div class="avatar" style="background:' + avatarColors[i % 6] + ';color:' + avatarTextColors[i % 6] + '">' + initials(a.name) + '</div>' +
+    '<div class="assignee-info"><div class="assignee-name">' + a.name + '</div><div class="assignee-group">' + (a.group || '') + '</div></div>' +
+    '<div class="assignee-count">' + a.count + '</div></div>'
+  ).join('');
+
+  // Risk donut
+  const byRisk = {};
+  changes.forEach(c => { const r = c.risk || 'Unknown'; byRisk[r] = (byRisk[r] || 0) + 1; });
+  let rDeg = 0;
+  const rColors = { 'Low': 'var(--green)', 'Moderate': 'var(--yellow)', 'High': 'var(--orange)', 'Unknown': 'var(--muted)' };
+  const rGrad = Object.entries(byRisk).map(([k,v]) => {
+    const start = rDeg; rDeg += (v / total) * 360;
+    return (rColors[k] || 'var(--muted)') + ' ' + start + 'deg ' + rDeg + 'deg';
+  }).join(', ');
+  const rLegend = Object.entries(byRisk).map(([k,v]) =>
+    '<div class="item"><div class="dot" style="background:' + (rColors[k] || 'var(--muted)') + '"></div>' + k + ' — ' + v + '</div>'
+  ).join('');
+
+  document.getElementById('reviewCharts').innerHTML =
+    '<div class="panel"><h2>Days Past Planned Window</h2><div class="bar-chart">' + barHTML + '</div></div>' +
+    '<div class="panel"><h2>Assignee Workload</h2>' + assigneeHTML + '</div>' +
+    '<div class="panel"><h2>Risk Distribution</h2><div class="donut-container">' +
+    '<div class="donut" style="background:conic-gradient(' + (rGrad || 'var(--muted) 0deg 360deg') + ')"></div>' +
+    '<div class="donut-legend">' + rLegend + '</div></div></div>';
+
+  // Table — use original changes order (preserves user sort), not staleness-sorted
+  const tableOrder = sortState.review.col ? changes : sorted;
+  let rows = '';
+  tableOrder.forEach(c => {
+    const stateClass = c.state === 'Review' ? 'normal' : c.state === 'Scheduled' ? 'standard' : 'moderate';
+    const act = c.last_activity || {};
+    let activityCell = '';
+    if (act.count === 0 || !act.latest) {
+      activityCell = '<span style="color:var(--red);font-weight:600;">No notes</span>';
+    } else {
+      const daysAgo = act.daysSinceUpdate;
+      const ageColor = daysAgo > 7 ? 'var(--red)' : daysAgo > 3 ? 'var(--orange)' : 'var(--green)';
+      activityCell = '<span style="color:' + ageColor + ';font-weight:600;">' + daysAgo + 'd ago</span>' +
+        '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' + esc(act.latest.author) + '</div>';
+    }
+
+    rows += '<tr class="expand-row" onclick="toggleDetail(\'' + c.number + '\')">' +
+      '<td><a href="https://vituity.service-now.com/change_request.do?sys_id=' + c.sys_id + '" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;">' + c.number + '</a></td>' +
+      '<td>' + truncate(c.short_description, 50) + '</td>' +
+      '<td><span class="badge ' + stateClass + '">' + (c.state || '') + '</span></td>' +
+      '<td><span class="badge ' + badgeClass(c.type) + '">' + (c.type || '') + '</span></td>' +
+      '<td><span class="badge ' + badgeClass(c.risk) + '">' + (c.risk || '') + '</span></td>' +
+      '<td>' + (c.ci || '') + '</td>' +
+      '<td>' + (c.assigned_to || '') + '</td>' +
+      '<td>' + formatDate(c.planned_start) + '</td>' +
+      '<td>' + formatDate(c.planned_end) + '</td>' +
+      '<td><span class="badge ' + (c.days_past > 3 ? 'stale' : 'ok') + '">' + c.days_past + 'd</span></td>' +
+      '<td>' + activityCell + '</td>' +
+      '</tr>';
+
+    // Expandable detail with activity log
+    var activityLog = '';
+    if (act.count > 0) {
+      activityLog = '<div class="detail-section" style="grid-column:1/-1;">' +
+        '<h3>Notes / Activity (' + act.count + ' entries)</h3>' +
+        '<div style="max-height:300px;overflow-y:auto;">' +
+        act.entries.map(function(e) {
+          return '<div style="margin-bottom:12px;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;border-left:3px solid var(--accent);">' +
+            '<div style="font-size:11px;color:var(--accent);font-weight:600;">' + esc(e.dateStr) + ' — ' + esc(e.author) + ' (' + esc(e.type) + ')</div>' +
+            '<div style="font-size:12px;color:var(--muted);margin-top:4px;white-space:pre-wrap;">' + esc(e.content) + '</div></div>';
+        }).join('') +
+        '</div></div>';
+    } else {
+      activityLog = '<div class="detail-section" style="grid-column:1/-1;">' +
+        '<h3>Notes / Activity</h3>' +
+        '<div style="padding:12px;background:rgba(214,48,49,0.08);border:1px solid rgba(214,48,49,0.3);border-radius:6px;color:var(--red);font-size:12px;font-weight:600;">No activity notes found — this change has no work notes or comments.</div>' +
+        '</div>';
+    }
+
+    // Plan analysis findings for overdue changes
+    var reviewFindings = analyzePlans(c);
+    var reviewFindingsHTML = reviewFindings.length > 0 ?
+      '<div class="detail-section" style="grid-column:1/-1;margin-top:12px;">' +
+      '<h3>Review Findings (' + reviewFindings.length + ')</h3>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+      reviewFindings.map(function(f) { return '<span class="badge ' + f.sev + '" style="padding:4px 10px;">' + f.sev.toUpperCase() + ' ' + esc(f.msg) + '</span>'; }).join('') +
+      '</div></div>' : '';
+
+    // CCB questions and impacts for overdue changes
+    var reviewQuestions = generateCcbQuestions(c);
+    var reviewImpacts = generateImpacts(c);
+    var reviewQuestionsImpactsHTML = (function() {
+      var questionsHTML = reviewQuestions.map(function(q) {
+        return '<div style="font-size:12px;color:var(--text);margin-bottom:6px;padding-left:12px;border-left:2px solid var(--accent);">' + esc(q) + '</div>';
+      }).join('');
+
+      var impactedCIsHTML = (reviewImpacts.impactedCIs && reviewImpacts.impactedCIs.length > 0) ?
+        '<div style="background:rgba(253,203,110,0.06);border:1px solid rgba(253,203,110,0.2);border-radius:8px;padding:14px 16px;margin-bottom:8px;">' +
+        '<div style="font-size:12px;font-weight:600;color:var(--yellow);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Impacted Services / CIs (' + reviewImpacts.impactedCIs.length + ')</div>' +
+        reviewImpacts.impactedCIs.map(function(ci) { return '<div style="font-size:12px;color:var(--text);margin-bottom:4px;">&#9679; ' + esc(ci) + '</div>'; }).join('') +
+        '</div>' : '';
+
+      return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">' +
+        '<div style="background:rgba(200,195,255,0.06);border:1px solid rgba(200,195,255,0.2);border-radius:8px;padding:14px 16px;">' +
+        '<div style="font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Potential Questions (' + reviewQuestions.length + ')</div>' +
+        questionsHTML + '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px;">' +
+        impactedCIsHTML +
+        '<div style="background:rgba(116,185,255,0.06);border:1px solid rgba(116,185,255,0.2);border-radius:8px;padding:14px 16px;">' +
+        '<div style="font-size:12px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Upstream Dependencies</div>' +
+        reviewImpacts.upstream.map(function(u) { return '<div style="font-size:12px;color:var(--text);margin-bottom:4px;">&#8593; ' + esc(u) + '</div>'; }).join('') +
+        '</div>' +
+        '<div style="background:rgba(0,206,201,0.06);border:1px solid rgba(0,206,201,0.2);border-radius:8px;padding:14px 16px;">' +
+        '<div style="font-size:12px;font-weight:600;color:var(--cyan);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Downstream Impacts</div>' +
+        reviewImpacts.downstream.map(function(d) { return '<div style="font-size:12px;color:var(--text);margin-bottom:4px;">&#8595; ' + esc(d) + '</div>'; }).join('') +
+        '</div></div></div>';
+    })();
+
+    rows += '<tr class="detail-row" id="detail-' + c.number + '"><td colspan="11">' +
+      activityLog +
+      reviewFindingsHTML +
+      '<div class="detail-grid" style="margin-top:16px;">' +
+      '<div class="detail-section"><h3>Description</h3><p>' + esc(truncate(c.description, 500)) + '</p></div>' +
+      '<div class="detail-section"><h3>Justification</h3><p>' + esc(truncate(c.justification, 500)) + '</p></div>' +
+      '<div class="detail-section"><h3>Implementation Plan</h3><p>' + esc(truncate(c.implementation_plan, 500)) + '</p></div>' +
+      '<div class="detail-section"><h3>Backout Plan</h3><p>' + esc(truncate(c.backout_plan, 500)) + '</p></div>' +
+      '<div class="detail-section"><h3>Test Plan</h3><p>' + esc(truncate(c.test_plan, 500)) + '</p></div>' +
+      '<div class="detail-section"><h3>Risk & Impact Analysis</h3><p>' + esc(truncate(c.risk_impact_analysis, 800)) + '</p></div>' +
+      '</div>' +
+      reviewQuestionsImpactsHTML +
+      '</td></tr>';
+  });
+  document.getElementById('reviewTable').innerHTML = rows || '<tr><td colspan="10" class="empty-state">No overdue changes found</td></tr>';
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────────
+function kpi(val, label, color) {
+  return '<div class="kpi"><div class="value" style="color:' + color + '">' + val + '</div><div class="label">' + label + '</div></div>';
+}
+function riskColor(r) {
+  const v = (r || '').toLowerCase();
+  if (v.includes('low')) return 'var(--green)';
+  if (v.includes('moderate')) return 'var(--yellow)';
+  if (v.includes('high')) return 'var(--orange)';
+  return 'var(--muted)';
+}
+function esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── Countdown timer ─────────────────────────────────────────────────────
+function updateCountdown() {
+  const remaining = Math.max(0, Math.floor((nextPoll - Date.now()) / 1000));
+  const m = Math.floor(remaining / 60);
+  const s = remaining % 60;
+  document.getElementById('countdown').textContent = 'Next refresh in ' + m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+// ── Calendar Tab ────────────────────────────────────────────────────────
+let calMonths = 2;
+let calAllChanges = null;
+
+async function loadCalendar(forceRefresh) {
+  if (calAllChanges && !forceRefresh) {
+    renderCalendar(calAllChanges);
+    return;
+  }
+  document.getElementById('calendarGrid').innerHTML = '<div style="color:var(--muted);padding:20px;">Loading calendar data...</div>';
+  try {
+    const res = await fetch('/api/calendar');
+    calAllChanges = await res.json();
+    calendarLoaded = true;
+    renderCalendar(calAllChanges);
+  } catch (e) {
+    document.getElementById('calendarGrid').innerHTML = '<div style="color:var(--red);padding:20px;">Failed to load calendar: ' + e.message + '</div>';
+  }
+}
+
+function switchCalRange() {
+  calMonths = parseInt(document.getElementById('calRange').value, 10);
+  if (calAllChanges) renderCalendar(calAllChanges);
+}
+
+function renderCalendar(allChanges) {
+  const SN = 'https://vituity.service-now.com/nav_to.do?uri=change_request.do?sysparm_query=number=';
+  const excludeStates = new Set(['Canceled', 'New', 'Assess']);
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  const rangeStart = new Date(today);
+  rangeStart.setMonth(rangeStart.getMonth() - calMonths);
+  const rangeStartStr = rangeStart.toISOString().split('T')[0];
+
+  // Filter by state and date range
+  const changes = allChanges.filter(c => {
+    if (excludeStates.has(c.state)) return false;
+    const ps = (c.planned_start || '').substring(0, 10);
+    return ps >= rangeStartStr;
+  });
+  const byDate = {};
+  changes.forEach(c => {
+    const ps = c.planned_start || '';
+    if (ps.length >= 10) {
+      const d = ps.substring(0, 10);
+      if (!byDate[d]) byDate[d] = [];
+      byDate[d].push(c);
+    }
+  });
+
+  // Stats
+  const byType = {};
+  const byState = {};
+  changes.forEach(c => {
+    byType[c.type] = (byType[c.type] || 0) + 1;
+    byState[c.state] = (byState[c.state] || 0) + 1;
+  });
+  document.getElementById('calCount').textContent = changes.length;
+  document.getElementById('calStats').innerHTML =
+    Object.entries(byState).map(([k,v]) => k + ': ' + v).join(' | ');
+
+  // KPIs
+  document.getElementById('calKpis').innerHTML =
+    kpi(changes.length, 'Total Changes', 'var(--accent)') +
+    kpi(byType['Normal'] || 0, 'Normal', 'var(--blue)') +
+    kpi(byType['Standard'] || 0, 'Standard', 'var(--green)') +
+    kpi(byType['Emergency'] || 0, 'Emergency', 'var(--red)');
+
+  // Get months
+  const monthSet = new Set();
+  changes.forEach(c => {
+    const ps = c.planned_start || '';
+    if (ps.length >= 7) monthSet.add(ps.substring(0, 7));
+  });
+  const months = [...monthSet].sort();
+
+  let html = '';
+  months.forEach(ym => {
+    const [y, m] = ym.split('-').map(Number);
+    const daysInMonth = new Date(y, m, 0).getDate();
+    const firstDow = new Date(y, m - 1, 1).getDay(); // 0=Sun
+    const monthName = new Date(y, m - 1, 1).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+    const monthChanges = changes.filter(c => (c.planned_start || '').startsWith(ym));
+
+    html += '<div class="cal-month-title">' + monthName + ' <span class="cal-count">' + monthChanges.length + ' changes</span></div>';
+    html += '<table class="cal-table"><thead><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr></thead><tbody><tr>';
+
+    // Empty cells before 1st
+    for (let i = 0; i < firstDow; i++) html += '<td class="empty"></td>';
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dow = (firstDow + d - 1) % 7;
+      if (dow === 0 && d > 1) html += '</tr><tr>';
+      const dateStr = ym + '-' + String(d).padStart(2, '0');
+      const isToday = dateStr === todayStr;
+      const isWeekend = dow === 0 || dow === 6;
+      const cls = isToday ? 'today' : isWeekend ? 'weekend' : '';
+      const dayChanges = byDate[dateStr] || [];
+
+      html += '<td class="' + cls + '">';
+      html += '<div class="cal-day-num">' + d;
+      if (dayChanges.length > 0) html += ' <span class="day-badge">(' + dayChanges.length + ')</span>';
+      html += '</div>';
+
+      const maxShow = 5;
+      dayChanges.slice(0, maxShow).forEach(c => {
+        const desc = c.short_description || '';
+        const maxDesc = 22;
+        const truncDesc = desc.length > maxDesc ? desc.substring(0, maxDesc) + '..' : desc;
+        const stateClass = 'cal-state-' + (c.state || '').replace(/\s/g, '');
+        const showState = c.state && c.state !== 'Closed';
+        html += '<a class="cal-chg cal-chg-' + (c.type || 'Normal') + '" href="' + SN + c.number + '" target="_blank" title="' + esc(c.short_description + ' (' + c.state + ')') + '">';
+        html += c.number + ': ' + esc(truncDesc);
+        if (showState) html += ' <span class="cal-state ' + stateClass + '">' + c.state + '</span>';
+        html += '</a>';
+      });
+      if (dayChanges.length > maxShow) {
+        html += '<span class="cal-chg" style="color:var(--yellow);font-style:italic;font-weight:600;">+' + (dayChanges.length - maxShow) + ' more</span>';
+      }
+      html += '</td>';
+    }
+
+    // Fill remaining cells
+    const lastDow = (firstDow + daysInMonth - 1) % 7;
+    for (let i = lastDow + 1; i < 7; i++) html += '<td class="empty"></td>';
+    html += '</tr></tbody></table>';
+  });
+
+  document.getElementById('calendarGrid').innerHTML = html;
+}
+
+// ── Init ────────────────────────────────────────────────────────────────
+fetchData();
+setInterval(() => { fetchData(); nextPoll = Date.now() + POLL_MS; }, POLL_MS);
+setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>
