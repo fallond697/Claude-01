@@ -49,3 +49,4 @@ scripts/calendar_changes.json
 .dolt/
 *.db
 .beads-credential-key
+batteryreport.html
