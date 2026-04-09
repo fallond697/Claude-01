@@ -257,20 +257,113 @@ def main():
     log("Calendar refresh complete")
 
 
+def _get_webhook_url():
+    """Get Teams webhook URL from env var, credential manager, or config file."""
+    # 1. Environment variable
+    url = os.environ.get("TEAMS_WEBHOOK_URL")
+    if url:
+        return url
+    # 2. Windows Credential Manager
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["powershell", "-Command",
+             "(New-Object System.Net.NetworkCredential((cmdkey /list:claude/teams-webhook-url "
+             "| Select-String 'User:').ToString().Split(':')[-1].Trim(), "
+             "(Get-StoredCredential -Target claude/teams-webhook-url).Password)).Password"],
+            capture_output=True, text=True, timeout=10,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
+    except Exception:
+        pass
+    # 3. Fallback: read from simple config file next to this script
+    webhook_file = os.path.join(SCRIPT_DIR, ".teams-webhook-url")
+    if os.path.exists(webhook_file):
+        with open(webhook_file, "r", encoding="utf-8") as f:
+            url = f.read().strip()
+        if url:
+            return url
+    return None
+
+
 def post_teams_notification(change_count):
-    """Post a calendar update notification with link to Teams channel via Graph API."""
+    """Post a calendar update notification to Teams channel via Incoming Webhook.
+    No MSAL/OAuth needed — webhooks use a permanent URL that never expires.
+    Falls back to Graph API if webhook URL is not configured.
+    """
+    SN_DASHBOARD = "https://vituity.service-now.com/now/platform-analytics-workspace/dashboards/params/edit/false/sys-id/27df42dbe6770153e1186e1215e19ffb"
+
+    webhook_url = _get_webhook_url()
+    if webhook_url:
+        _post_via_webhook(change_count, webhook_url, SN_DASHBOARD)
+    else:
+        log("  No webhook URL found, falling back to Graph API (MSAL)...")
+        _post_via_graph_api(change_count, SN_DASHBOARD)
+
+
+def _post_via_webhook(change_count, webhook_url, sn_dashboard):
+    """Post to Teams via Incoming Webhook — no auth tokens needed."""
+    date_str = datetime.now().strftime("%B %d, %Y")
+
+    # Adaptive Card format for Incoming Webhooks
+    payload = {
+        "type": "message",
+        "attachments": [{
+            "contentType": "application/vnd.microsoft.card.adaptive",
+            "content": {
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "type": "AdaptiveCard",
+                "version": "1.4",
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "text": "Change Management Calendar Updated",
+                        "weight": "Bolder",
+                        "size": "Medium",
+                        "color": "Accent"
+                    },
+                    {
+                        "type": "TextBlock",
+                        "text": f"**{change_count}** changes refreshed — {date_str}",
+                        "wrap": True
+                    }
+                ],
+                "actions": [
+                    {
+                        "type": "Action.OpenUrl",
+                        "title": "Open Calendar in ServiceNow",
+                        "url": sn_dashboard
+                    }
+                ]
+            }
+        }]
+    }
+
+    msg = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        webhook_url,
+        data=msg,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req) as resp:
+        status = resp.status
+    log(f"  Teams notification posted via webhook (HTTP {status})")
+
+
+def _post_via_graph_api(change_count, sn_dashboard):
+    """Legacy: Post to Teams via Graph API with MSAL auth. Requires valid token cache."""
     import msal as _msal
 
     TENANT_ID = os.environ.get("AZURE_TENANT_ID", "56b24b68-e3c8-4895-89a0-05a74d0f8c84")
-    MSAL_CLIENT_ID = os.environ.get("MSAL_CLIENT_ID", "REDACTED_MSAL_CLIENT_ID")
+    MSAL_CLIENT_ID = os.environ.get("MSAL_CLIENT_ID", "14d82eec-204b-4c2f-b7e8-296a70dab67e")
     MSAL_TOKEN_CACHE = os.environ.get(
         "MSAL_TOKEN_CACHE",
         os.path.join(Path.home(), ".email_ingest", "vituity_token_cache.json"),
     )
     GROUP_ID = os.environ.get("TEAMS_GROUP_ID", "fb1fa849-3b0d-4d15-a72f-f1b56d60186a")
     CHANNEL_ID = os.environ.get("TEAMS_CHANNEL_ID", "19:77c7ce1868b546108d5e77c65eff8a3b@thread.skype")
-    CALENDAR_URL = "https://vituity.sharepoint.com/sites/PM-ITSEngineering-DEPT/Shared%20Documents/CCB/Change_Management_Calendar.html"
-    SN_DASHBOARD = "https://vituity.service-now.com/now/platform-analytics-workspace/dashboards/params/edit/false/sys-id/27df42dbe6770153e1186e1215e19ffb"
 
     cache = _msal.SerializableTokenCache()
     cache.deserialize(Path(MSAL_TOKEN_CACHE).read_text())
@@ -280,9 +373,13 @@ def post_teams_notification(change_count):
         token_cache=cache,
     )
     accounts = app.get_accounts()
+    if not accounts:
+        raise RuntimeError("No MSAL accounts found. Run reauth-msal.py or configure a webhook URL.")
     result = app.acquire_token_silent(["Group.ReadWrite.All", "ChannelMessage.Send"], account=accounts[0])
     if not result or "access_token" not in result:
         result = app.acquire_token_silent(["Group.ReadWrite.All"], account=accounts[0])
+    if not result or "access_token" not in result:
+        raise RuntimeError("MSAL token expired. Run reauth-msal.py or configure a webhook URL.")
     token = result["access_token"]
 
     date_str = datetime.now().strftime("%B %d, %Y")
@@ -291,11 +388,10 @@ def post_teams_notification(change_count):
         f'<p style="margin:6px 0;font-size:14px">'
         f'<strong>{change_count}</strong> changes refreshed &mdash; {date_str}</p>'
         f'<p style="margin:4px 0">'
-        f'<a href="{SN_DASHBOARD}">Open Calendar in ServiceNow</a>'
+        f'<a href="{sn_dashboard}">Open Calendar in ServiceNow</a>'
         f'</p>'
     )
 
-    import urllib.request
     msg = json.dumps({"body": {"contentType": "html", "content": html}}).encode("utf-8")
     req = urllib.request.Request(
         f"https://graph.microsoft.com/v1.0/teams/{GROUP_ID}/channels/{CHANNEL_ID}/messages",
@@ -308,7 +404,7 @@ def post_teams_notification(change_count):
     )
     with urllib.request.urlopen(req) as resp:
         status = resp.status
-    log(f"  Teams notification posted (HTTP {status})")
+    log(f"  Teams notification posted via Graph API (HTTP {status})")
 
 
 if __name__ == "__main__":

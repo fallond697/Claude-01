@@ -45,6 +45,9 @@ coverage/
 scripts/servicenow_changes.json
 scripts/calendar_changes.json
 
+# MSAL temporary device codes
+scripts/msal-device-code.txt
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db
