@@ -1,3 +1,5 @@
 {
-    "claudeCode.useTerminal": true
+    "claudeCode.useTerminal": true,
+    "chat.utilityModel": "aitk-foundry/Microsoft Foundry/claude-opus-4-8",
+    "chat.utilitySmallModel": "aitk-foundry/Microsoft Foundry/claude-opus-4-8"
 }
